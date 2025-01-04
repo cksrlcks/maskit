@@ -53,6 +53,18 @@ export default {
           5: "hsl(var(--chart-5))",
         },
       },
+      animation: {
+        "bg-color-change": "bgColorTransition 4s infinite",
+      },
+      keyframes: {
+        bgColorTransition: {
+          "0%": { backgroundColor: "#FF6347" },
+          "25%": { backgroundColor: "#FF4500" },
+          "50%": { backgroundColor: "#32CD32" },
+          "75%": { backgroundColor: "#1E90FF" },
+          "100%": { backgroundColor: "#FF6347" },
+        },
+      },
     },
   },
   plugins: [animate],

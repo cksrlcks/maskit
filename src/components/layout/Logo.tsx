@@ -1,6 +1,6 @@
 export function Logo() {
   return (
-    <h1>
+    <h1 className="relative">
       <svg
         width={81}
         height={16}
@@ -16,6 +16,7 @@ export function Logo() {
         <path d="M0 0.980011H4.46L8.22 8.76001L11.96 0.980011H16.42V15H12.76V6.68001L9.56 13.62H6.86L3.66 6.68001V15H0V0.980011Z" />
       </svg>
       <span className="sr-only">MASK-IT</span>
+      <span className="animate-bg-color-change opacity-1/2 absolute left-1/2 top-1/2 h-1 w-[calc(100%+6px)] -translate-x-1/2 -translate-y-1/2 opacity-50"></span>
     </h1>
   );
 }
