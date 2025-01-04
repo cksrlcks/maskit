@@ -1,4 +1,4 @@
-import { Share } from "lucide-react";
+import { Copy, Download, Mail, Share, Smartphone } from "lucide-react";
 import { Button } from "@/components/ui";
 import {
   DropdownMenu,
@@ -21,13 +21,21 @@ export function ShareMenu() {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuItem onClick={() => handleImage("copy")} disabled={!image}>
+          <Copy />
           이미지 복사하기
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => handleImage("download")} disabled={!image}>
+          <Download />
           이미지 다운받기
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => handleImage("share")}>공유하기</DropdownMenuItem>
-        <DropdownMenuItem onClick={() => handleImage("mail")}>메일 보내기</DropdownMenuItem>
+        <DropdownMenuItem onClick={() => handleImage("share")} disabled={!image}>
+          <Smartphone />
+          공유하기
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => handleImage("mail")} disabled={!image}>
+          <Mail />
+          메일 보내기
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
