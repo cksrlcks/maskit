@@ -55,6 +55,8 @@ export default {
       },
       animation: {
         "bg-color-change": "bgColorTransition 4s infinite",
+        "accordion-down": "accordion-down 0.2s ease-out",
+        "accordion-up": "accordion-up 0.2s ease-out",
       },
       keyframes: {
         bgColorTransition: {
@@ -63,6 +65,14 @@ export default {
           "50%": { backgroundColor: "#32CD32" },
           "75%": { backgroundColor: "#1E90FF" },
           "100%": { backgroundColor: "#FF6347" },
+        },
+        "accordion-down": {
+          from: { height: "0" },
+          to: { height: "var(--radix-accordion-content-height)" },
+        },
+        "accordion-up": {
+          from: { height: "var(--radix-accordion-content-height)" },
+          to: { height: "0" },
         },
       },
     },

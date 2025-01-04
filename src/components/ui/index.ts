@@ -8,3 +8,5 @@ export * from "./Toggle";
 export * from "./Separator";
 export * from "./Popover";
 export * from "./Slider";
+export * from "./Accordion";
+export * from "./Dialog";
