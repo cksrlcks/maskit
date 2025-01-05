@@ -17,37 +17,53 @@ import {
 import { RectConfig } from "konva/lib/shapes/Rect";
 import { KonvaEventObject } from "konva/lib/Node";
 import { useCanvas } from "@/context/CanvasContext";
-import { Droplet, Redo, RotateCcw, Undo, WandSparkles, ImageUp } from "lucide-react";
+import { Droplet, RotateCcw, WandSparkles, ImageUp, Loader2, Trash2 } from "lucide-react";
 import { HexColorPicker } from "react-colorful";
+import { createWorker, PSM } from "tesseract.js";
+import { toast } from "@/hooks/use-toast";
+import { v4 as uuidv4 } from "uuid";
 
 export interface Rect extends RectConfig {
   fill: string;
 }
 
-type History = {
-  rectangles: Rect[];
-  color: string;
-  opacity: number;
-};
-
-function calculateCanvasSize(
-  imageWidth: number,
-  imageHeight: number,
-  limitWidth: number,
-  limitHeight: number,
-) {
+function calculateCanvasSize({
+  width: imageWidth,
+  height: imageHeight,
+}: {
+  width: number;
+  height: number;
+}) {
   const ratio = imageWidth / imageHeight;
+  const browserWidth = window.innerWidth;
+  const browserHeight = window.innerHeight;
+
   let targetWidth = imageWidth;
   let targetHeight = imageHeight;
 
-  if (targetWidth > limitWidth) {
-    targetWidth = limitWidth;
-    targetHeight = targetWidth / ratio;
-  }
+  const limitWidth = Math.round(browserWidth * 0.8);
+  const limitHeight = Math.min(Math.round(browserHeight * 0.8), browserHeight - 200);
 
-  if (targetHeight > limitHeight) {
-    targetHeight = limitHeight;
-    targetWidth = targetHeight * ratio;
+  if (ratio > 1) {
+    if (targetWidth > limitWidth) {
+      targetWidth = limitWidth;
+      targetHeight = targetWidth / ratio;
+    }
+
+    if (targetHeight > limitHeight) {
+      targetHeight = limitHeight;
+      targetWidth = targetHeight * ratio;
+    }
+  } else {
+    if (targetHeight > limitHeight) {
+      targetHeight = limitHeight;
+      targetWidth = targetHeight * ratio;
+    }
+
+    if (targetWidth > limitWidth) {
+      targetWidth = limitWidth;
+      targetHeight = targetWidth / ratio;
+    }
   }
 
   const scaleX = targetWidth / imageWidth;
@@ -66,26 +82,16 @@ function calculateCanvasSize(
 export function Canvas() {
   const { stageRef, image, imageUrl, handleUpload } = useCanvas();
 
-  const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 });
-  const [canvasLimitSize, setCanvasLimitSize] = useState({
-    maxWidth: 0,
-    maxHeight: 0,
-  });
-
+  const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0, scale: { x: 1, y: 1 } });
   const [rectangles, setRectangles] = useState<Rect[]>([]);
   const [newRectangle, setNewRectangle] = useState<Rect | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [color, setColor] = useState("#000");
   const [opacity, setOpacity] = useState(1);
+  const [isOCRLoading, setIsOCRLoading] = useState(true);
+  const [isOCRMode, setIsOCRMode] = useState(false);
 
-  const [history, setHistory] = useState<History[]>([
-    {
-      rectangles: [],
-      color: "#000",
-      opacity: 1,
-    },
-  ]);
-  const [historyIndex, setHistoryIndex] = useState(0);
+  const [blocks, setBlocks] = useState<Partial<Rect>[]>([]);
 
   const isDrawing = useRef(false);
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -94,13 +100,9 @@ export function Canvas() {
 
   useEffect(() => {
     function handleCanvasLimitSize() {
-      const browserWidth = window.innerWidth;
-      const browserHeight = window.innerHeight;
-
-      setCanvasLimitSize({
-        maxWidth: Math.round(browserWidth * 0.8),
-        maxHeight: Math.min(Math.round(browserHeight * 0.8), browserHeight - 200),
-      });
+      if (!image) return;
+      const canvasSize = calculateCanvasSize(image);
+      setCanvasSize(canvasSize);
     }
 
     handleCanvasLimitSize();
@@ -110,37 +112,45 @@ export function Canvas() {
     return () => {
       window.removeEventListener("resize", handleCanvasLimitSize);
     };
-  }, []);
+  }, [image]);
 
   useEffect(() => {
-    if (!image) return;
+    if (!image || blocks.length) return;
 
-    const { width, height } = calculateCanvasSize(
-      image.width,
-      image.height,
-      canvasLimitSize.maxWidth,
-      canvasLimitSize.maxHeight,
-    );
+    (async function getOCRData() {
+      try {
+        const worker = await createWorker(["kor", "eng"]);
+        await worker.setParameters({
+          tessedit_pageseg_mode: PSM.AUTO,
+        });
 
-    if (width === canvasSize.width && height === canvasSize.height) return;
+        const { data } = await worker.recognize(image);
+        const blocks = data.paragraphs.map((item) => ({
+          x: item.bbox.x0,
+          y: item.bbox.y0,
+          width: item.bbox.x1 - item.bbox.x0,
+          height: item.bbox.y1 - item.bbox.y0,
+          id: `rect-${uuidv4()}`,
+        }));
 
-    const scaleX = width / canvasSize.width;
-    const scaleY = height / canvasSize.height;
+        setBlocks(blocks.slice(0, -1));
 
-    setCanvasSize({ width, height });
+        await worker.terminate();
+      } catch (error) {
+        console.error(error);
 
-    if (scaleX !== 1 || scaleY !== 1) {
-      setRectangles((prev) =>
-        prev.map((rect) => ({
-          ...rect,
-          x: (rect.x || 0) * scaleX,
-          y: (rect.y || 0) * scaleY,
-          width: (rect.width || 0) * scaleX,
-          height: (rect.height || 0) * scaleY,
-        })),
-      );
-    }
-  }, [image, canvasSize, canvasLimitSize]);
+        toast({
+          duration: 2000,
+          variant: "destructive",
+          title: "자동감지 실패",
+          description: "문자인식을 실패했습니다.",
+        });
+      } finally {
+        setIsOCRLoading(false);
+      }
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [image]);
 
   function handleMouseDown(e: KonvaEventObject<MouseEvent>) {
     const stage = e.target.getStage();
@@ -151,7 +161,9 @@ export function Canvas() {
     setSelectedId(null);
     isDrawing.current = true;
 
-    const { x, y } = position;
+    const x = position.x / canvasSize.scale.x;
+    const y = position.y / canvasSize.scale.y;
+
     setNewRectangle({
       x,
       y,
@@ -170,7 +182,8 @@ export function Canvas() {
 
     if (!position || !stage) return;
 
-    const { x, y } = position;
+    const x = position.x / canvasSize.scale.x;
+    const y = position.y / canvasSize.scale.y;
 
     const prevX = newRectangle.x || 0;
     const prevY = newRectangle.y || 0;
@@ -198,79 +211,62 @@ export function Canvas() {
     const { width, height } = newRectangle;
     if (Math.abs(width || 0) > 5 && Math.abs(height || 0) > 5) {
       setRectangles((prev) => {
-        const updatedRectangles = [...prev, newRectangle];
-        addToHistory(updatedRectangles, color, opacity);
-        return updatedRectangles;
+        return [...prev, { ...newRectangle, id: `rect-${uuidv4()}` }];
       });
     }
     setNewRectangle(null);
   }
 
-  function handleRectChange(index: number, newProps: Rect) {
-    setRectangles((prev) => prev.map((rect, idx) => (idx === index ? newProps : rect)));
+  function handleColor(color: string) {
+    setColor(color);
   }
 
-  function handleColor(newColor: string) {
-    setColor(newColor);
-    addToHistory(rectangles, newColor, opacity);
-  }
-
-  function handleOpacity(newOpacity: number) {
-    setOpacity(newOpacity);
-    addToHistory(rectangles, color, newOpacity);
+  function handleOpacity(opactiy: number) {
+    setOpacity(opactiy);
   }
 
   function handleReset() {
     setRectangles([]);
-    setHistory([
-      {
-        rectangles: [],
-        color: "#000",
-        opacity: 1,
-      },
-    ]);
-    setHistoryIndex(0);
+    setOpacity(1);
+    setColor("#000");
+    setIsOCRMode(false);
   }
 
-  function handleUndo() {
-    if (historyIndex > 0) {
-      const newIndex = historyIndex - 1;
-      const previousState = history[newIndex];
-
-      setHistoryIndex(newIndex);
-      setRectangles(previousState.rectangles);
-      setColor(previousState.color);
-      setOpacity(previousState.opacity);
+  function handleOCRMode() {
+    if (blocks.length === 0) {
+      toast({
+        duration: 2000,
+        variant: "destructive",
+        title: "감지된 영역 없음",
+        description: "문자인식이 잘 안되요.",
+      });
     }
-  }
-  function handleRedo() {
-    if (historyIndex < history.length - 1) {
-      const newIndex = historyIndex + 1;
-      const nextState = history[newIndex];
-
-      setHistoryIndex(newIndex);
-      setRectangles(nextState.rectangles);
-      setColor(nextState.color);
-      setOpacity(nextState.opacity);
-    }
+    setIsOCRMode((prev) => !prev);
   }
 
-  function addToHistory(newRectangles: Rect[], newColor: string, newOpacity: number) {
-    const newHistory = history.slice(0, historyIndex + 1);
-    newHistory.push({
-      rectangles: newRectangles,
-      color: newColor,
-      opacity: newOpacity,
-    });
-    setHistory(newHistory);
-    setHistoryIndex(newHistory.length - 1);
+  function handleRefresh() {
+    window.location.reload();
   }
 
   const rects = [...rectangles, ...(newRectangle ? [newRectangle] : [])];
+
   const isDrawingMode = image;
 
-  const disabledUndo = historyIndex <= 0;
-  const disabledRedo = historyIndex >= history.length - 1;
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.key === "Backspace" || e.key === "Delete") && selectedId) {
+        setBlocks(blocks.filter((block) => block.id !== selectedId));
+        setRectangles(rectangles.filter((rect) => rect.id !== selectedId));
+        setSelectedId(null);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [selectedId, blocks, rectangles]);
 
   return (
     <>
@@ -366,25 +362,9 @@ export function Canvas() {
 
             <Separator orientation="vertical" className="h-8" />
             <div className="flex items-center gap-1">
-              <Button
-                variant="outline"
-                size="icon"
-                title="이전 단계"
-                onClick={handleUndo}
-                disabled={disabledUndo}
-              >
-                <Undo className="h-[1.2rem] w-[1.2rem]" />
-                <span className="sr-only">이전 단계</span>
-              </Button>
-              <Button
-                variant="outline"
-                size="icon"
-                title="앞 단계"
-                onClick={handleRedo}
-                disabled={disabledRedo}
-              >
-                <Redo className="h-[1.2rem] w-[1.2rem]" />
-                <span className="sr-only">앞 단계</span>
+              <Button variant="outline" size="icon" title="리셋" onClick={handleRefresh}>
+                <Trash2 className="h-[1.2rem] w-[1.2rem]" />
+                <span className="sr-only">취소</span>
               </Button>
               <Button variant="outline" size="icon" title="리셋" onClick={handleReset}>
                 <RotateCcw className="h-[1.2rem] w-[1.2rem]" />
@@ -393,8 +373,19 @@ export function Canvas() {
             </div>
             <Separator orientation="vertical" className="h-8" />
             <div className="flex items-center gap-1">
-              <Button variant="outline" size="icon" title="자동 그리기">
-                <WandSparkles className="h-[1.2rem] w-[1.2rem]" />
+              <Button
+                variant="outline"
+                size="icon"
+                title="자동 그리기"
+                onClick={handleOCRMode}
+                disabled={isOCRLoading}
+              >
+                {isOCRLoading ? (
+                  <Loader2 className="animate-spin" />
+                ) : (
+                  <WandSparkles className="h-[1.2rem] w-[1.2rem]" />
+                )}
+
                 <span className="sr-only">자동 그리기</span>
               </Button>
             </div>
@@ -454,51 +445,51 @@ export function Canvas() {
                     <Rect
                       key={i}
                       {...rect}
-                      draggable
-                      id={`rect-${i}`}
-                      stroke={selectedId === String(i) ? "#00ff00" : undefined}
+                      x={(rect.x || 0) * canvasSize.scale.x}
+                      y={(rect.y || 0) * canvasSize.scale.y}
+                      width={(rect.width || 0) * canvasSize.scale.x}
+                      height={(rect.height || 0) * canvasSize.scale.y}
+                      id={rect.id}
+                      stroke={selectedId === rect.id ? "#00ff00" : undefined}
                       strokeWidth={2}
                       fill={color}
                       opacity={opacity}
-                      perfectDrawEnabled={false}
-                      transformsEnabled="position"
-                      onClick={() => setSelectedId(String(i))}
-                      onDragEnd={(e) => {
-                        handleRectChange(i, {
-                          ...rect,
-                          x: e.target.x(),
-                          y: e.target.y(),
-                        });
-                      }}
-                      onTransformEnd={(e) => {
-                        const node = e.target;
-                        const scaleX = node.scaleX();
-                        const scaleY = node.scaleY();
-
-                        // 크기 업데이트 후 scale 초기화
-                        node.scaleX(1);
-                        node.scaleY(1);
-
-                        handleRectChange(i, {
-                          ...rect,
-                          x: node.x(),
-                          y: node.y(),
-                          width: node.width() * scaleX,
-                          height: node.height() * scaleY,
-                        });
-                      }}
+                      onClick={() => setSelectedId(rect.id || null)}
+                      draggable
                     />
                   ))}
-                  {selectedId !== null && (
-                    <Transformer
-                      ref={transformerRef}
-                      nodes={[stageRef.current?.findOne(`#rect-${selectedId}`) as Konva.Rect]}
-                      boundBoxFunc={(_, newBox) => {
-                        newBox.width = Math.max(5, newBox.width);
-                        newBox.height = Math.max(5, newBox.height);
-                        return newBox;
-                      }}
-                    />
+
+                  {isOCRMode &&
+                    blocks.map((rect, i) => (
+                      <Rect
+                        key={i}
+                        {...rect}
+                        x={(rect.x || 0) * canvasSize.scale.x}
+                        y={(rect.y || 0) * canvasSize.scale.y}
+                        width={(rect.width || 0) * canvasSize.scale.x}
+                        height={(rect.height || 0) * canvasSize.scale.y}
+                        id={rect.id}
+                        stroke={selectedId === rect.id ? "#00ff00" : undefined}
+                        strokeWidth={2}
+                        fill={color}
+                        opacity={opacity}
+                        onClick={() => setSelectedId(rect.id || null)}
+                        onDragMove={() => setSelectedId(rect.id || null)}
+                        draggable
+                      />
+                    ))}
+                  {selectedId && (
+                    <>
+                      <Transformer
+                        ref={transformerRef}
+                        nodes={[stageRef.current?.findOne(`#${selectedId}`) as Konva.Rect]}
+                        boundBoxFunc={(_, newBox) => {
+                          newBox.width = Math.max(5, newBox.width);
+                          newBox.height = Math.max(5, newBox.height);
+                          return newBox;
+                        }}
+                      />
+                    </>
                   )}
                 </Layer>
               </Stage>
