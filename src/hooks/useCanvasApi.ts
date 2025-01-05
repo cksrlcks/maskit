@@ -5,7 +5,7 @@ import { RectConfig } from "konva/lib/shapes/Rect";
 import { KonvaEventObject } from "konva/lib/Node";
 import { createWorker, PSM } from "tesseract.js";
 import { v4 as uuidv4 } from "uuid";
-import { calculateCanvasSize } from "@/components/canvas/helper";
+import { calculateCanvasSize } from "@/components/Canvas/helper";
 
 export interface Rect extends RectConfig {
   fill: string;
