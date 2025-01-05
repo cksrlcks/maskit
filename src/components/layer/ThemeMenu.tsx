@@ -8,7 +8,7 @@ import {
 } from "@/components/ui";
 import { useTheme } from "@/context/ThemeContext";
 
-export function ThemeSwitch() {
+export function ThemeMenu() {
   const { setTheme } = useTheme();
 
   return (

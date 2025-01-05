@@ -1,6 +1,6 @@
 export function Logo() {
   return (
-    <h1 className="relative">
+    <h1 className="relative flex h-9 items-center">
       <svg
         width={81}
         height={16}
