@@ -73,9 +73,9 @@ export function Canvas() {
                 width={canvasSize.width}
                 height={canvasSize.height}
                 className="absolute left-1/2 top-1/2 z-40 -translate-x-1/2 -translate-y-1/2 bg-transparent"
-                onMouseDown={handleMouseDown}
-                onMouseMove={handleMouseMove}
-                onMouseUp={handleMouseUp}
+                onPointerDown={handleMouseDown}
+                onPointerMove={handleMouseMove}
+                onPointerUp={handleMouseUp}
               >
                 <Layer>
                   {rects.map((rect, i) => (
@@ -89,9 +89,10 @@ export function Canvas() {
                       id={rect.id}
                       stroke={selectedId === rect.id ? "#00ff00" : undefined}
                       strokeWidth={2}
+                      strokeScaleEnabled={false}
                       fill={color}
                       opacity={opacity}
-                      onClick={() => handleSelected(rect.id || null)}
+                      onPointerDown={() => handleSelected(rect.id || null)}
                       draggable
                     />
                   ))}
@@ -120,6 +121,9 @@ export function Canvas() {
                       <Transformer
                         ref={transformerRef}
                         nodes={[stageRef.current?.findOne(`#${selectedId}`) as Konva.Rect]}
+                        keepRatio={false}
+                        padding={6}
+                        ignoreStroke={true}
                         boundBoxFunc={(_, newBox) => {
                           newBox.width = Math.max(5, newBox.width);
                           newBox.height = Math.max(5, newBox.height);

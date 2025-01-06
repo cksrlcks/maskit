@@ -206,7 +206,7 @@ export default function useCanvasApi() {
     setSelectedId(id);
   }
 
-  function handleMouseDown(e: KonvaEventObject<MouseEvent>) {
+  function handleMouseDown(e: KonvaEventObject<MouseEvent> | KonvaEventObject<TouchEvent>) {
     const stage = e.target.getStage();
     const position = stage?.getPointerPosition();
     if (e.target !== e.target.getStage()) return;
@@ -228,7 +228,7 @@ export default function useCanvasApi() {
     });
   }
 
-  function handleMouseMove(e: KonvaEventObject<MouseEvent>) {
+  function handleMouseMove(e: KonvaEventObject<MouseEvent> | KonvaEventObject<TouchEvent>) {
     if (!newRectangle) return;
 
     const stage = e.target.getStage();
