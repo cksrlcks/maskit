@@ -13,4 +13,7 @@ export default defineConfig({
   optimizeDeps: {
     include: ["tesseract.js"],
   },
+  server: {
+    host: "0.0.0.0",
+  },
 });
