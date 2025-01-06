@@ -8,7 +8,17 @@ import {
 } from "@/components/ui";
 import { useAlert } from "@/context/AlertContext";
 import { useCanvas } from "@/context/CanvasContext";
-import { Droplet, Eraser, Eye, EyeOff, Images, Loader2, Trash2, WandSparkles } from "lucide-react";
+import {
+  Droplet,
+  Eraser,
+  Eye,
+  EyeOff,
+  Images,
+  Loader2,
+  Sticker,
+  Trash2,
+  WandSparkles,
+} from "lucide-react";
 import { HexColorPicker } from "react-colorful";
 import { AnimatePresence, motion } from "motion/react";
 
@@ -118,6 +128,18 @@ export function CanvasMenu() {
               />
             </PopoverContent>
           </Popover>
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button variant="outline" size="icon">
+                <Sticker className="h-[1.2rem] w-[1.2rem]" />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-96">
+              <div className="flex items-center justify-center py-5 text-sm opacity-40">
+                워터마크, 스티커 준비중
+              </div>
+            </PopoverContent>
+          </Popover>
         </div>
 
         <Separator orientation="vertical" className="h-8" />
@@ -168,7 +190,6 @@ export function CanvasMenu() {
           <AnimatePresence mode="popLayout">
             {selectedId && (
               <motion.div
-                layout
                 initial={{ opacity: 0, scale: 0 }}
                 exit={{ opacity: 0, scale: 0, transition: { duration: 0.1 } }}
                 animate={{ opacity: 1, scale: 1 }}
