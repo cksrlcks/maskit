@@ -66,3 +66,8 @@
     @apply bg-background text-foreground;
   }
 }
+
+html {
+  touch-action: none;
+  user-select: none;
+}
