@@ -8,11 +8,12 @@ import {
 } from "@/components/ui";
 import { useAlert } from "@/context/AlertContext";
 import { useCanvas } from "@/context/CanvasContext";
-import { Droplet, Eraser, Images, Loader2, WandSparkles } from "lucide-react";
+import { Droplet, Eraser, Eye, EyeOff, Images, Loader2, WandSparkles } from "lucide-react";
 import { HexColorPicker } from "react-colorful";
 
 export function CanvasMenu() {
   const {
+    isHide,
     image,
     color,
     handleColor,
@@ -20,6 +21,7 @@ export function CanvasMenu() {
     handleReset,
     handleOCRMode,
     handleRefresh,
+    handleToggleHide,
     isOCRLoading,
   } = useCanvas();
 
@@ -146,6 +148,19 @@ export function CanvasMenu() {
           >
             <Eraser className="h-[1.2rem] w-[1.2rem]" />
             <span className="sr-only">전부 지우기</span>
+          </Button>
+          <Button
+            variant="outline"
+            size="icon"
+            title={isHide ? "보이기" : "가리기"}
+            onClick={handleToggleHide}
+          >
+            {isHide ? (
+              <EyeOff className="h-[1.2rem] w-[1.2rem]"></EyeOff>
+            ) : (
+              <Eye className="h-[1.2rem] w-[1.2rem]" />
+            )}
+            <span className="sr-only">{isHide ? "보이기" : "가리기"}</span>
           </Button>
         </div>
         <Separator orientation="vertical" className="h-8" />

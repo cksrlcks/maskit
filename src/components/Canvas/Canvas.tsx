@@ -6,6 +6,7 @@ import { ImageUp } from "lucide-react";
 
 export function Canvas() {
   const {
+    isHide,
     stageRef,
     containerRef,
     fileRef,
@@ -77,28 +78,9 @@ export function Canvas() {
                 onPointerMove={handleMouseMove}
                 onPointerUp={handleMouseUp}
               >
-                <Layer>
-                  {rects.map((rect, i) => (
-                    <Rect
-                      key={i}
-                      {...rect}
-                      x={(rect.x || 0) * canvasSize.scale.x}
-                      y={(rect.y || 0) * canvasSize.scale.y}
-                      width={(rect.width || 0) * canvasSize.scale.x}
-                      height={(rect.height || 0) * canvasSize.scale.y}
-                      id={rect.id}
-                      stroke={selectedId === rect.id ? "#00ff00" : undefined}
-                      strokeWidth={2}
-                      strokeScaleEnabled={false}
-                      fill={color}
-                      opacity={opacity}
-                      onPointerDown={() => handleSelected(rect.id || null)}
-                      draggable
-                    />
-                  ))}
-
-                  {isOCRMode &&
-                    blocks.map((rect, i) => (
+                {isHide && (
+                  <Layer>
+                    {rects.map((rect, i) => (
                       <Rect
                         key={i}
                         {...rect}
@@ -109,30 +91,52 @@ export function Canvas() {
                         id={rect.id}
                         stroke={selectedId === rect.id ? "#00ff00" : undefined}
                         strokeWidth={2}
+                        strokeScaleEnabled={false}
                         fill={color}
                         opacity={opacity}
-                        onClick={() => handleSelected(rect.id || null)}
-                        onDragMove={() => handleSelected(rect.id || null)}
+                        onPointerDown={() => handleSelected(rect.id || null)}
+                        onDragMove={() => {}} // draggable 경고 안보기위해서
                         draggable
                       />
                     ))}
-                  {selectedId && (
-                    <>
-                      <Transformer
-                        ref={transformerRef}
-                        nodes={[stageRef.current?.findOne(`#${selectedId}`) as Konva.Rect]}
-                        keepRatio={false}
-                        padding={6}
-                        ignoreStroke={true}
-                        boundBoxFunc={(_, newBox) => {
-                          newBox.width = Math.max(5, newBox.width);
-                          newBox.height = Math.max(5, newBox.height);
-                          return newBox;
-                        }}
-                      />
-                    </>
-                  )}
-                </Layer>
+
+                    {isOCRMode &&
+                      blocks.map((rect, i) => (
+                        <Rect
+                          key={i}
+                          {...rect}
+                          x={(rect.x || 0) * canvasSize.scale.x}
+                          y={(rect.y || 0) * canvasSize.scale.y}
+                          width={(rect.width || 0) * canvasSize.scale.x}
+                          height={(rect.height || 0) * canvasSize.scale.y}
+                          id={rect.id}
+                          stroke={selectedId === rect.id ? "#00ff00" : undefined}
+                          strokeWidth={2}
+                          fill={color}
+                          opacity={opacity}
+                          onClick={() => handleSelected(rect.id || null)}
+                          onDragMove={() => handleSelected(rect.id || null)}
+                          draggable
+                        />
+                      ))}
+                    {selectedId && (
+                      <>
+                        <Transformer
+                          ref={transformerRef}
+                          nodes={[stageRef.current?.findOne(`#${selectedId}`) as Konva.Rect]}
+                          keepRatio={false}
+                          padding={6}
+                          ignoreStroke={true}
+                          boundBoxFunc={(_, newBox) => {
+                            newBox.width = Math.max(5, newBox.width);
+                            newBox.height = Math.max(5, newBox.height);
+                            return newBox;
+                          }}
+                        />
+                      </>
+                    )}
+                  </Layer>
+                )}
               </Stage>
             </div>
           </div>

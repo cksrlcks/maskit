@@ -24,6 +24,7 @@ export default function useCanvasApi() {
   const [opacity, setOpacity] = useState(1);
   const [isOCRLoading, setIsOCRLoading] = useState(true);
   const [isOCRMode, setIsOCRMode] = useState(false);
+  const [isHide, setIsHide] = useState(true);
   const [blocks, setBlocks] = useState<Partial<Rect>[]>([]);
 
   const isDrawing = useRef(false);
@@ -302,6 +303,10 @@ export default function useCanvasApi() {
     window.location.reload();
   }
 
+  function handleToggleHide() {
+    setIsHide((prev) => !prev);
+  }
+
   useEffect(() => {
     return () => {
       if (imageUrl) {
@@ -435,6 +440,7 @@ export default function useCanvasApi() {
     opacity,
     isOCRLoading,
     isOCRMode,
+    isHide,
     blocks,
     handleSelected,
     handleImage,
@@ -447,5 +453,6 @@ export default function useCanvasApi() {
     handleReset,
     handleOCRMode,
     handleRefresh,
+    handleToggleHide,
   };
 }
