@@ -6,6 +6,7 @@ import { KonvaEventObject } from "konva/lib/Node";
 import { createWorker, PSM } from "tesseract.js";
 import { v4 as uuidv4 } from "uuid";
 import { calculateCanvasSize } from "@/components/Canvas/helper";
+import { useHotkeys } from "react-hotkeys-hook";
 
 export interface Rect extends RectConfig {
   fill: string;
@@ -332,32 +333,6 @@ export default function useCanvasApi() {
   }, [imageUrl]);
 
   useEffect(() => {
-    function handleKeyDown(e: KeyboardEvent) {
-      if (!image) return;
-
-      if (e.key.toLocaleLowerCase() === "s" && (e.metaKey || e.ctrlKey)) {
-        e.preventDefault();
-        handleImage("download");
-      }
-
-      if (e.key.toLocaleLowerCase() === "c" && (e.metaKey || e.ctrlKey)) {
-        e.preventDefault();
-        handleImage("copy");
-      }
-
-      if (e.key === "Backspace" || e.key === "Delete") {
-        handleSelectDelete();
-      }
-    }
-
-    window.addEventListener("keydown", handleKeyDown);
-
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [image, handleImage, handleSelectDelete]);
-
-  useEffect(() => {
     function handleCanvasLimitSize() {
       if (!image) return;
       const canvasSize = calculateCanvasSize(image);
@@ -440,6 +415,21 @@ export default function useCanvasApi() {
       document.removeEventListener("click", handleClickOutSizeCanvas);
     };
   }, [newRectangle]);
+
+  useHotkeys("cmd+s, ctrl+s, meta+s", (e) => {
+    e.preventDefault();
+    handleImage("download");
+  });
+
+  useHotkeys("cmd+c, ctrl+c, meta+c", (e) => {
+    e.preventDefault();
+    handleImage("copy");
+  });
+
+  useHotkeys("backspace, delete", (e) => {
+    e.preventDefault();
+    handleSelectDelete();
+  });
 
   return {
     stageRef,

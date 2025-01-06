@@ -24,10 +24,17 @@ import {
 } from "@/components/ui";
 import { useCanvas } from "@/context/CanvasContext";
 import { useState } from "react";
+import { useHotkeys } from "react-hotkeys-hook";
 
 export function RootMenu() {
   const { image, handleImage } = useCanvas();
   const [isHelpOpen, setIsHelpOpen] = useState(false);
+
+  useHotkeys("shift+?, ?, shfit+/", (e) => {
+    e.preventDefault();
+    setIsHelpOpen(true);
+  });
+
   return (
     <>
       <DropdownMenu>
