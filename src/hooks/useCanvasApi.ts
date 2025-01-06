@@ -307,6 +307,17 @@ export default function useCanvasApi() {
     setIsHide((prev) => !prev);
   }
 
+  const handleSelectDelete = useCallback(
+    function handleSelectDelete() {
+      if (!selectedId) return;
+
+      setBlocks(blocks.filter((block) => block.id !== selectedId));
+      setRectangles(rectangles.filter((rect) => rect.id !== selectedId));
+      setSelectedId(null);
+    },
+    [blocks, rectangles, selectedId],
+  );
+
   useEffect(() => {
     return () => {
       if (imageUrl) {
@@ -329,10 +340,8 @@ export default function useCanvasApi() {
         handleImage("copy");
       }
 
-      if ((e.key === "Backspace" || e.key === "Delete") && selectedId) {
-        setBlocks(blocks.filter((block) => block.id !== selectedId));
-        setRectangles(rectangles.filter((rect) => rect.id !== selectedId));
-        setSelectedId(null);
+      if (e.key === "Backspace" || e.key === "Delete") {
+        handleSelectDelete();
       }
     }
 
@@ -341,7 +350,7 @@ export default function useCanvasApi() {
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [image, handleImage, blocks, rectangles, selectedId]);
+  }, [image, handleImage, handleSelectDelete]);
 
   useEffect(() => {
     function handleCanvasLimitSize() {
@@ -399,8 +408,10 @@ export default function useCanvasApi() {
 
   useEffect(() => {
     function handleClickOutSizeCanvas(e: MouseEvent) {
-      const stageContainer = stageRef.current?.container();
+      const target = e.target as HTMLElement;
+      if (target.closest("[data-prevent-focusout]")) return;
 
+      const stageContainer = stageRef.current?.container();
       if (stageContainer && !stageContainer.contains(e.target as Node)) {
         setSelectedId(null);
 
@@ -454,5 +465,6 @@ export default function useCanvasApi() {
     handleOCRMode,
     handleRefresh,
     handleToggleHide,
+    handleSelectDelete,
   };
 }

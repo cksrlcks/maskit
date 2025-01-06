@@ -8,7 +8,7 @@ import {
 } from "@/components/ui";
 import { useAlert } from "@/context/AlertContext";
 import { useCanvas } from "@/context/CanvasContext";
-import { Droplet, Eraser, Eye, EyeOff, Images, Loader2, WandSparkles } from "lucide-react";
+import { Droplet, Eraser, Eye, EyeOff, Images, Loader2, Trash2, WandSparkles } from "lucide-react";
 import { HexColorPicker } from "react-colorful";
 
 export function CanvasMenu() {
@@ -16,12 +16,14 @@ export function CanvasMenu() {
     isHide,
     image,
     color,
+    selectedId,
     handleColor,
     handleOpacity,
     handleReset,
     handleOCRMode,
     handleRefresh,
     handleToggleHide,
+    handleSelectDelete,
     isOCRLoading,
   } = useCanvas();
 
@@ -156,12 +158,24 @@ export function CanvasMenu() {
             onClick={handleToggleHide}
           >
             {isHide ? (
-              <EyeOff className="h-[1.2rem] w-[1.2rem]"></EyeOff>
+              <EyeOff className="h-[1.2rem] w-[1.2rem]" />
             ) : (
               <Eye className="h-[1.2rem] w-[1.2rem]" />
             )}
             <span className="sr-only">{isHide ? "보이기" : "가리기"}</span>
           </Button>
+          {selectedId && (
+            <Button
+              variant="outline"
+              size="icon"
+              title="선택삭제"
+              data-prevent-focusout
+              onClick={handleSelectDelete}
+            >
+              <Trash2 className="h-[1.2rem] w-[1.2rem]" />
+              <span className="sr-only">선택삭제</span>
+            </Button>
+          )}
         </div>
         <Separator orientation="vertical" className="h-8" />
         <div className="flex items-center gap-1">
