@@ -66,7 +66,11 @@ export function Canvas() {
                   strokeScaleEnabled={false}
                   fill={color}
                   opacity={!isHide ? 0 : opacity}
-                  onPointerDown={() => handleSelected(rect.id || null)}
+                  onPointerDown={() => {
+                    if (isHide) {
+                      handleSelected(rect.id || null);
+                    }
+                  }}
                   onPointerUp={(e) => {
                     const node = e.target;
                     const scaleX = canvasSize.scale.x;
@@ -90,7 +94,7 @@ export function Canvas() {
                     handleUpdateRect(updatedRect);
                   }}
                   onDragMove={() => {}} // draggable 경고 안보기위해서
-                  draggable
+                  draggable={isHide}
                 />
               ))}
 
@@ -108,7 +112,11 @@ export function Canvas() {
                     strokeWidth={2}
                     fill={color}
                     opacity={!isHide ? 0 : opacity}
-                    onPointerDown={() => handleSelected(rect.id || null)}
+                    onPointerDown={() => {
+                      if (isHide) {
+                        handleSelected(rect.id || null);
+                      }
+                    }}
                     onPointerUp={(e) => {
                       const node = e.target;
                       const scaleX = canvasSize.scale.x;
@@ -133,10 +141,10 @@ export function Canvas() {
                       };
                       handleUpdateRect(updatedRect);
                     }}
-                    draggable
+                    draggable={isHide}
                   />
                 ))}
-              {selectedId && (
+              {selectedId && isHide && (
                 <>
                   <Transformer
                     ref={transformerRef}
