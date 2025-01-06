@@ -318,6 +318,11 @@ export default function useCanvasApi() {
     [blocks, rectangles, selectedId],
   );
 
+  function handleUpdateRect(updatedRect: Rect) {
+    setRectangles((prev) => prev.map((rect) => (rect.id === updatedRect.id ? updatedRect : rect)));
+    setBlocks((prev) => prev.map((rect) => (rect.id === updatedRect.id ? updatedRect : rect)));
+  }
+
   useEffect(() => {
     return () => {
       if (imageUrl) {
@@ -466,5 +471,6 @@ export default function useCanvasApi() {
     handleRefresh,
     handleToggleHide,
     handleSelectDelete,
+    handleUpdateRect,
   };
 }

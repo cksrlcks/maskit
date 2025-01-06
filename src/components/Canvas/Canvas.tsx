@@ -1,6 +1,5 @@
 import Konva from "konva";
 import { Stage, Layer, Rect, Transformer } from "react-konva";
-
 import { useCanvas } from "@/context/CanvasContext";
 
 export function Canvas() {
@@ -22,6 +21,7 @@ export function Canvas() {
     handleMouseMove,
     handleMouseDown,
     handleMouseUp,
+    handleUpdateRect,
   } = useCanvas();
 
   const rects = [...rectangles, ...(newRectangle ? [newRectangle] : [])];
@@ -51,9 +51,51 @@ export function Canvas() {
             onPointerMove={handleMouseMove}
             onPointerUp={handleMouseUp}
           >
-            {isHide && (
-              <Layer>
-                {rects.map((rect, i) => (
+            <Layer>
+              {rects.map((rect, i) => (
+                <Rect
+                  key={i}
+                  {...rect}
+                  x={(rect.x || 0) * canvasSize.scale.x}
+                  y={(rect.y || 0) * canvasSize.scale.y}
+                  width={(rect.width || 0) * canvasSize.scale.x}
+                  height={(rect.height || 0) * canvasSize.scale.y}
+                  id={rect.id}
+                  stroke={selectedId === rect.id ? "#00ff00" : undefined}
+                  strokeWidth={2}
+                  strokeScaleEnabled={false}
+                  fill={color}
+                  opacity={!isHide ? 0 : opacity}
+                  onPointerDown={() => handleSelected(rect.id || null)}
+                  onPointerUp={(e) => {
+                    const node = e.target;
+                    const scaleX = canvasSize.scale.x;
+                    const scaleY = canvasSize.scale.y;
+                    const updatedRect = {
+                      ...rect,
+                      x: node.x() / scaleX,
+                      y: node.y() / scaleY,
+                    };
+                    handleUpdateRect(updatedRect);
+                  }}
+                  onTransformEnd={(e) => {
+                    const node = e.target;
+                    const scaleX = canvasSize.scale.x;
+                    const scaleY = canvasSize.scale.y;
+                    const updatedRect = {
+                      ...rect,
+                      x: node.x() / scaleX,
+                      y: node.y() / scaleY,
+                    };
+                    handleUpdateRect(updatedRect);
+                  }}
+                  onDragMove={() => {}} // draggable 경고 안보기위해서
+                  draggable
+                />
+              ))}
+
+              {isOCRMode &&
+                blocks.map((rect, i) => (
                   <Rect
                     key={i}
                     {...rect}
@@ -64,52 +106,53 @@ export function Canvas() {
                     id={rect.id}
                     stroke={selectedId === rect.id ? "#00ff00" : undefined}
                     strokeWidth={2}
-                    strokeScaleEnabled={false}
                     fill={color}
-                    opacity={opacity}
+                    opacity={!isHide ? 0 : opacity}
                     onPointerDown={() => handleSelected(rect.id || null)}
-                    onDragMove={() => {}} // draggable 경고 안보기위해서
+                    onPointerUp={(e) => {
+                      const node = e.target;
+                      const scaleX = canvasSize.scale.x;
+                      const scaleY = canvasSize.scale.y;
+                      const updatedRect = {
+                        ...rect,
+                        fill: color,
+                        x: node.x() / scaleX,
+                        y: node.y() / scaleY,
+                      };
+                      handleUpdateRect(updatedRect);
+                    }}
+                    onTransformEnd={(e) => {
+                      const node = e.target;
+                      const scaleX = canvasSize.scale.x;
+                      const scaleY = canvasSize.scale.y;
+                      const updatedRect = {
+                        ...rect,
+                        fill: color,
+                        x: node.x() / scaleX,
+                        y: node.y() / scaleY,
+                      };
+                      handleUpdateRect(updatedRect);
+                    }}
                     draggable
                   />
                 ))}
-
-                {isOCRMode &&
-                  blocks.map((rect, i) => (
-                    <Rect
-                      key={i}
-                      {...rect}
-                      x={(rect.x || 0) * canvasSize.scale.x}
-                      y={(rect.y || 0) * canvasSize.scale.y}
-                      width={(rect.width || 0) * canvasSize.scale.x}
-                      height={(rect.height || 0) * canvasSize.scale.y}
-                      id={rect.id}
-                      stroke={selectedId === rect.id ? "#00ff00" : undefined}
-                      strokeWidth={2}
-                      fill={color}
-                      opacity={opacity}
-                      onClick={() => handleSelected(rect.id || null)}
-                      onDragMove={() => handleSelected(rect.id || null)}
-                      draggable
-                    />
-                  ))}
-                {selectedId && (
-                  <>
-                    <Transformer
-                      ref={transformerRef}
-                      nodes={[stageRef.current?.findOne(`#${selectedId}`) as Konva.Rect]}
-                      keepRatio={false}
-                      padding={6}
-                      ignoreStroke={true}
-                      boundBoxFunc={(_, newBox) => {
-                        newBox.width = Math.max(5, newBox.width);
-                        newBox.height = Math.max(5, newBox.height);
-                        return newBox;
-                      }}
-                    />
-                  </>
-                )}
-              </Layer>
-            )}
+              {selectedId && (
+                <>
+                  <Transformer
+                    ref={transformerRef}
+                    nodes={[stageRef.current?.findOne(`#${selectedId}`) as Konva.Rect]}
+                    keepRatio={false}
+                    padding={6}
+                    ignoreStroke={true}
+                    boundBoxFunc={(_, newBox) => {
+                      newBox.width = Math.max(5, newBox.width);
+                      newBox.height = Math.max(5, newBox.height);
+                      return newBox;
+                    }}
+                  />
+                </>
+              )}
+            </Layer>
           </Stage>
         </div>
       </div>
