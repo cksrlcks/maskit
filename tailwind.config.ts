@@ -77,5 +77,8 @@ export default {
       },
     },
   },
+  future: {
+    hoverOnlyWhenSupported: true,
+  },
   plugins: [animate],
 } satisfies Config;
