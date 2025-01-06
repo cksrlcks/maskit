@@ -1,9 +1,8 @@
-import { Canvas } from "@/components/Canvas";
+import { Canvas, Upload } from "@/components/Canvas";
+import { useCanvas } from "@/context/CanvasContext";
 
 export function AppCanvas() {
-  return (
-    <>
-      <Canvas />
-    </>
-  );
+  const { imageUrl } = useCanvas();
+
+  return !imageUrl ? <Upload /> : <Canvas />;
 }
