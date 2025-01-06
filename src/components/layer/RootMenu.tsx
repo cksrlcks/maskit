@@ -32,7 +32,7 @@ export function RootMenu() {
     <>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="outline" size="icon">
+          <Button variant="outline" size="icon" className="shrink-0">
             <Menu className="h-[1.2rem] w-[1.2rem]" />
             <span className="sr-only">메뉴</span>
           </Button>
