@@ -3,21 +3,20 @@ import { AppCanvas, AppProvider, AppDialog, AppFooter, AppLayer, AppMenu } from 
 
 export default function App() {
   useEffect(() => {
-    // Block pinch-zooming on iOS outside of the content area
-    const handleTouchMove = (event: TouchEvent) => {
+    const preventTouchZoom = (e: TouchEvent) => {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-expect-error
-      if (typeof event.scale === "number" && event.scale !== 1) {
-        event.preventDefault();
+      if (e.touches.length > 1 || (typeof e.scale === "number" && e.scale !== 1)) {
+        e.preventDefault();
       }
     };
 
-    document.addEventListener("touchmove", handleTouchMove, {
-      passive: false,
-    });
+    document.addEventListener("touchstart", preventTouchZoom, { passive: false });
+    document.addEventListener("touchmove", preventTouchZoom, { passive: false });
 
     return () => {
-      document.removeEventListener("touchmove", handleTouchMove);
+      document.removeEventListener("touchstart", preventTouchZoom);
+      document.removeEventListener("touchmove", preventTouchZoom);
     };
   }, []);
 
