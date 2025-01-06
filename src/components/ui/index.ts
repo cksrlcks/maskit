@@ -10,3 +10,4 @@ export * from "./Popover";
 export * from "./Slider";
 export * from "./Accordion";
 export * from "./Dialog";
+export * from "./AlertDialog";

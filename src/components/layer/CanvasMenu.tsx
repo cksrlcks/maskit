@@ -6,8 +6,9 @@ import {
   Separator,
   Slider,
 } from "@/components/ui";
+import { useAlert } from "@/context/AlertContext";
 import { useCanvas } from "@/context/CanvasContext";
-import { Droplet, Loader2, RotateCcw, Trash2, WandSparkles } from "lucide-react";
+import { Droplet, Eraser, Images, Loader2, WandSparkles } from "lucide-react";
 import { HexColorPicker } from "react-colorful";
 
 export function CanvasMenu() {
@@ -21,6 +22,8 @@ export function CanvasMenu() {
     handleRefresh,
     isOCRLoading,
   } = useCanvas();
+
+  const { onAlert } = useAlert();
 
   if (!image) {
     return null;
@@ -114,13 +117,35 @@ export function CanvasMenu() {
 
         <Separator orientation="vertical" className="h-8" />
         <div className="flex items-center gap-1">
-          <Button variant="outline" size="icon" title="리셋" onClick={handleRefresh}>
-            <Trash2 className="h-[1.2rem] w-[1.2rem]" />
-            <span className="sr-only">취소</span>
+          <Button
+            variant="outline"
+            size="icon"
+            title="이미지 교체"
+            onClick={() =>
+              onAlert({
+                title: "이미지교체",
+                message: "작업내용이 사라집니다. 정말 교체할까요?",
+                onAction: handleRefresh,
+              })
+            }
+          >
+            <Images className="h-[1.2rem] w-[1.2rem]" />
+            <span className="sr-only">이미지 교체</span>
           </Button>
-          <Button variant="outline" size="icon" title="리셋" onClick={handleReset}>
-            <RotateCcw className="h-[1.2rem] w-[1.2rem]" />
-            <span className="sr-only">리셋</span>
+          <Button
+            variant="outline"
+            size="icon"
+            title="전부 지우기"
+            onClick={() =>
+              onAlert({
+                title: "작업초기화",
+                message: "작업내용을 모두 지웁니다.",
+                onAction: handleReset,
+              })
+            }
+          >
+            <Eraser className="h-[1.2rem] w-[1.2rem]" />
+            <span className="sr-only">전부 지우기</span>
           </Button>
         </div>
         <Separator orientation="vertical" className="h-8" />
