@@ -7,6 +7,12 @@ import { createWorker, PSM } from "tesseract.js";
 import { v4 as uuidv4 } from "uuid";
 import { calculateCanvasSize } from "@/components/Canvas/helper";
 import { useHotkeys } from "react-hotkeys-hook";
+import {
+  canvasDownload,
+  convertToFileBlob,
+  copyClipboard,
+  mergeCanvasWithImage,
+} from "@/lib/canvas";
 
 export interface Rect extends RectConfig {
   fill: string;
@@ -52,43 +58,13 @@ export default function useCanvasApi() {
     async function handleImage(type: handleImageType) {
       if (!stageRef.current || !imageUrl || !image) return;
 
-      const canvas = document.createElement("canvas");
-      canvas.width = image.width;
-      canvas.height = image.height;
-      const context = canvas.getContext("2d");
-      if (!context) return;
-
-      context.drawImage(image, 0, 0, image.width, image.height);
-
-      const stageWidth = stageRef.current?.width() || 0;
-      const stageHeight = stageRef.current?.height() || 0;
       const stageCanvas = stageRef.current?.toCanvas();
+      const canvas = mergeCanvasWithImage(stageCanvas, image);
 
-      if (stageCanvas) {
-        context.drawImage(
-          stageCanvas,
-          0,
-          0,
-          stageWidth,
-          stageHeight,
-          0,
-          0,
-          image.width,
-          image.height,
-        );
-      }
-
-      const blob = await new Promise<Blob>((resolve) =>
-        canvas.toBlob((blob) => resolve(blob!), "image/png"),
-      );
+      if (!canvas) return;
 
       if (type === "download") {
-        const link = document.createElement("a");
-        link.download = "maskit.png";
-        link.href = canvas.toDataURL();
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+        canvasDownload(canvas);
 
         toast({
           duration: 2000,
@@ -97,23 +73,7 @@ export default function useCanvasApi() {
         });
       } else if (type === "copy") {
         try {
-          try {
-            //ios
-            await navigator.clipboard.write([
-              new ClipboardItem({
-                "image/png": new Promise((resolve) => {
-                  canvas.toBlob((blob) => resolve(new Blob([blob!])));
-                }),
-              }),
-            ]);
-          } catch {
-            //chrome
-            await navigator.clipboard.write([
-              new ClipboardItem({
-                "image/png": blob,
-              }),
-            ]);
-          }
+          await copyClipboard(canvas);
 
           toast({
             duration: 2000,
@@ -130,7 +90,7 @@ export default function useCanvasApi() {
           });
         }
       } else if (type === "share") {
-        const file = new File([blob], "maskit.png", { type: "image/png" });
+        const file = await convertToFileBlob(canvas);
 
         try {
           if (navigator.share) {
@@ -157,23 +117,7 @@ export default function useCanvasApi() {
         }
       } else if (type === "mail") {
         try {
-          try {
-            //ios
-            await navigator.clipboard.write([
-              new ClipboardItem({
-                "image/png": new Promise((resolve) => {
-                  canvas.toBlob((blob) => resolve(new Blob([blob!])));
-                }),
-              }),
-            ]);
-          } catch {
-            //chrome
-            await navigator.clipboard.write([
-              new ClipboardItem({
-                "image/png": blob,
-              }),
-            ]);
-          }
+          await copyClipboard(canvas);
 
           toast({
             duration: 2000,
@@ -195,23 +139,7 @@ export default function useCanvasApi() {
         }
       } else if (type === "kakao") {
         try {
-          try {
-            //ios
-            await navigator.clipboard.write([
-              new ClipboardItem({
-                "image/png": new Promise((resolve) => {
-                  canvas.toBlob((blob) => resolve(new Blob([blob!])));
-                }),
-              }),
-            ]);
-          } catch {
-            //chrome
-            await navigator.clipboard.write([
-              new ClipboardItem({
-                "image/png": blob,
-              }),
-            ]);
-          }
+          await copyClipboard(canvas);
 
           window.open("kakaotalk://launch", "_blank");
 
