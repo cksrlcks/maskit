@@ -8,7 +8,7 @@ export function Upload() {
   return (
     <div className="fixed bottom-0 left-0 right-0 top-0 flex h-full w-full items-center justify-center">
       <label className="cursor-pointer">
-        <Card className="w-full max-w-xs p-4 text-center">
+        <Card className="w-full max-w-96 p-4 text-center">
           <CardHeader>
             <ImageUp className="mx-auto mb-5 mt-3 h-12 w-12" />
             <CardTitle>편집할 이미지를 선택해주세요</CardTitle>
