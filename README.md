@@ -1,6 +1,6 @@
 # MASKIT
 
-[https://[easy-maskit.netlify.app](https://maskit.kr/)](https://maskit.kr/)
+https://maskit.kr/
 
 이미지에 마스킹처리를 도와주는 사이트 제작
 
