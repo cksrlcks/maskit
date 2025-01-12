@@ -76,6 +76,9 @@ export default {
         },
       },
     },
+    fontFamily: {
+      emoji: ["Noto Color Emoji"],
+    },
   },
   future: {
     hoverOnlyWhenSupported: true,

@@ -11,3 +11,4 @@ export * from "./Slider";
 export * from "./Accordion";
 export * from "./Dialog";
 export * from "./AlertDialog";
+export * from "./Tabs";
