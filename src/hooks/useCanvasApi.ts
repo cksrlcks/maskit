@@ -256,15 +256,13 @@ export default function useCanvasApi() {
   function handleUpdateItems(updated: CanvasItemConfig) {
     if (updated.type === "ocr") {
       setBlocks((prev) => prev.map((rect) => (rect.id === updated.id ? updated : rect)));
-    } else if (updated.type === "emoji") {
+    } else {
       setItems((prev) => {
         const item = prev.find((item) => item.id === updated.id);
         const filtered = prev.filter((item) => item.id !== updated.id);
 
         return [...filtered, { ...item, ...updated }];
       });
-    } else {
-      setItems((prev) => prev.map((item) => (item.id === updated.id ? updated : item)));
     }
   }
 
