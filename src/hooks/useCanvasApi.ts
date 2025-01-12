@@ -26,7 +26,7 @@ type CanvasItemConfig = RectConfig | ImageConfig | TextConfig;
 type handleImageType = "download" | "copy" | "mail" | "share" | "kakao";
 
 export default function useCanvasApi() {
-  const { image, imageUrl, handleUpload, resetImage } = useImage();
+  const { image, imageUrl, handleUpload } = useImage();
 
   const [isLoading, setIsLoading] = useState(false);
   const [blocks, setBlocks] = useState<CanvasItemConfig[]>([]);
@@ -44,6 +44,7 @@ export default function useCanvasApi() {
   const stageRef = useRef<Konva.Stage | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const fileRef = useRef<HTMLInputElement | null>(null);
+  const ocrResultRef = useRef<RectConfig[] | null>(null);
 
   const handleImage = useCallback(
     async function handleImage(type: handleImageType) {
@@ -201,10 +202,13 @@ export default function useCanvasApi() {
   }
 
   function handleReset() {
-    resetImage();
+    setItems([]);
     setOpacity(1);
     setColor("#000");
     setIsOCRMode(false);
+    if (ocrResultRef.current) {
+      setBlocks(ocrResultRef.current);
+    }
   }
 
   function handleOCRMode() {
@@ -317,6 +321,7 @@ export default function useCanvasApi() {
           height: (item.bbox.y1 - item.bbox.y0) * scaleY,
           type: "ocr",
         }));
+        ocrResultRef.current = blocks.slice(0, -1);
 
         setBlocks(blocks.slice(0, -1));
 
