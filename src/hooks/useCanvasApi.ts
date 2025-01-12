@@ -1,4 +1,4 @@
-import { ChangeEvent, useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Konva from "konva";
 import { toast } from "@/hooks/useToast";
 import { RectConfig } from "konva/lib/shapes/Rect";
@@ -13,53 +13,42 @@ import {
   copyClipboard,
   mergeCanvasWithImage,
 } from "@/lib/canvas";
+import { ImageConfig } from "konva/lib/shapes/Image";
+import useImage from "./useImage";
+import { TextConfig } from "konva/lib/shapes/Text";
 
 export interface Rect extends RectConfig {
-  fill: string;
+  fill?: string;
 }
+
+type CanvasItemConfig = RectConfig | ImageConfig | TextConfig;
 
 type handleImageType = "download" | "copy" | "mail" | "share" | "kakao";
 
 export default function useCanvasApi() {
-  const [image, setImage] = useState<HTMLImageElement | null>(null);
-  const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const { image, imageUrl, handleUpload, resetImage } = useImage();
+
+  const [blocks, setBlocks] = useState<CanvasItemConfig[]>([]);
+  const [items, setItems] = useState<CanvasItemConfig[]>([]);
   const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0, scale: { x: 1, y: 1 } });
-  const [rectangles, setRectangles] = useState<Rect[]>([]);
+  const [scale, setScale] = useState({ x: 1, y: 1 });
   const [newRectangle, setNewRectangle] = useState<Rect | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [color, setColor] = useState("#000");
   const [opacity, setOpacity] = useState(1);
   const [isOCRLoading, setIsOCRLoading] = useState(true);
   const [isOCRMode, setIsOCRMode] = useState(false);
-  const [isHide, setIsHide] = useState(true);
-  const [blocks, setBlocks] = useState<Partial<Rect>[]>([]);
+  const [isMaskMode, setIsMaskMode] = useState(true);
 
-  const isDrawing = useRef(false);
   const stageRef = useRef<Konva.Stage | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const fileRef = useRef<HTMLInputElement | null>(null);
-  const transformerRef = useRef<Konva.Transformer | null>(null);
-
-  function handleUpload(e: ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
-    if (file) {
-      const url = URL.createObjectURL(file);
-      setImageUrl(url);
-      const img = new Image();
-      img.src = url;
-
-      img.onload = () => {
-        setImage(img);
-      };
-    }
-  }
 
   const handleImage = useCallback(
     async function handleImage(type: handleImageType) {
-      if (!stageRef.current || !imageUrl || !image) return;
-
-      const stageCanvas = stageRef.current?.toCanvas();
-      const canvas = mergeCanvasWithImage(stageCanvas, image);
+      if (!stageRef.current || !image) return;
+      const stage = stageRef.current;
+      const canvas = mergeCanvasWithImage(stage.toCanvas({ pixelRatio: 2 }), image);
 
       if (!canvas) return;
 
@@ -160,7 +149,7 @@ export default function useCanvasApi() {
         }
       }
     },
-    [image, imageUrl],
+    [image],
   );
 
   function handleSelected(id: string | null) {
@@ -168,67 +157,53 @@ export default function useCanvasApi() {
   }
 
   function handleMouseDown(e: KonvaEventObject<MouseEvent> | KonvaEventObject<TouchEvent>) {
-    const stage = e.target.getStage();
-    const position = stage?.getPointerPosition();
-    if (e.target !== e.target.getStage()) return;
-    if (!position) return;
+    if (e.target !== e.target.getStage() || !stageRef.current) return;
+    const position = stageRef.current.getPointerPosition();
 
-    setSelectedId(null);
-    isDrawing.current = true;
-
-    const x = position.x / canvasSize.scale.x;
-    const y = position.y / canvasSize.scale.y;
-
-    setNewRectangle({
-      x,
-      y,
-      width: 0,
-      height: 0,
-      fill: color,
-      opacity,
-    });
+    if (position) {
+      setSelectedId(null);
+      setNewRectangle({
+        type: "rect",
+        id: `rect-${uuidv4()}`,
+        x: position.x,
+        y: position.y,
+        width: 0,
+        height: 0,
+      });
+    }
   }
 
-  function handleMouseMove(e: KonvaEventObject<MouseEvent> | KonvaEventObject<TouchEvent>) {
-    if (!newRectangle) return;
+  function handleMouseMove() {
+    if (!newRectangle || !stageRef.current) return;
 
-    const stage = e.target.getStage();
-    const position = stage?.getPointerPosition();
+    const position = stageRef.current.getPointerPosition();
 
-    if (!position || !stage) return;
-
-    const x = position.x / canvasSize.scale.x;
-    const y = position.y / canvasSize.scale.y;
-
-    const prevX = newRectangle.x || 0;
-    const prevY = newRectangle.y || 0;
-
-    const width = x - prevX;
-    const height = y - prevY;
-
-    setNewRectangle((prev) => {
-      if (!prev) return null;
-      return {
-        ...prev,
-        width: width,
-        height: height,
-        x: prevX,
-        y: prevY,
-      };
-    });
+    if (position) {
+      setNewRectangle((prev) => {
+        return {
+          ...prev,
+          width: position.x - (prev?.x || 0),
+          height: position.y - (prev?.y || 0),
+        };
+      });
+    }
   }
 
   function handleMouseUp() {
     if (!newRectangle) return;
 
-    isDrawing.current = false;
-
     const { width, height } = newRectangle;
+
     if (Math.abs(width || 0) > 5 && Math.abs(height || 0) > 5) {
-      setRectangles((prev) => {
-        return [...prev, { ...newRectangle, id: `rect-${uuidv4()}` }];
-      });
+      setItems((prev) => [
+        ...prev,
+        {
+          ...newRectangle,
+          id: `rect-${uuidv4()}`,
+        },
+      ]);
     }
+
     setNewRectangle(null);
   }
 
@@ -241,7 +216,7 @@ export default function useCanvasApi() {
   }
 
   function handleReset() {
-    setRectangles([]);
+    resetImage();
     setOpacity(1);
     setColor("#000");
     setIsOCRMode(false);
@@ -264,51 +239,81 @@ export default function useCanvasApi() {
   }
 
   function handleToggleHide() {
-    setIsHide((prev) => !prev);
+    setIsMaskMode((prev) => !prev);
   }
 
   const handleSelectDelete = useCallback(
     function handleSelectDelete() {
       if (!selectedId) return;
 
-      setBlocks(blocks.filter((block) => block.id !== selectedId));
-      setRectangles(rectangles.filter((rect) => rect.id !== selectedId));
+      setBlocks((prev) => prev.filter((block) => block.id !== selectedId));
+      setItems((prev) => prev.filter((item) => item.id !== selectedId));
       setSelectedId(null);
     },
-    [blocks, rectangles, selectedId],
+    [selectedId],
   );
 
-  function handleUpdateRect(updatedRect: Rect) {
-    setRectangles((prev) => prev.map((rect) => (rect.id === updatedRect.id ? updatedRect : rect)));
-    setBlocks((prev) => prev.map((rect) => (rect.id === updatedRect.id ? updatedRect : rect)));
+  function handleUpdateItems(updated: CanvasItemConfig) {
+    if (updated.type === "ocr") {
+      setBlocks((prev) => prev.map((rect) => (rect.id === updated.id ? updated : rect)));
+    } else if (updated.type === "emoji") {
+      setItems((prev) => {
+        const item = prev.find((item) => item.id === updated.id);
+        const filtered = prev.filter((item) => item.id !== updated.id);
+
+        return [...filtered, { ...item, ...updated }];
+      });
+    } else {
+      setItems((prev) => prev.map((item) => (item.id === updated.id ? updated : item)));
+    }
   }
 
+  function handleEmoji(code: string) {
+    setItems((prev) => {
+      const id = `emoji-${uuidv4()}`;
+      const fontSize = canvasSize.width * scale.x * 0.25;
+      const scaledWidth = canvasSize.width * scale.x;
+      const scaledHeight = canvasSize.height * scale.y;
+      return [
+        ...prev,
+        {
+          id,
+          type: "emoji",
+          x: (scaledWidth - fontSize) / 2 + (Math.floor(Math.random() * 200) - 100),
+          y: (scaledHeight - fontSize) / 2 + (Math.floor(Math.random() * 200) - 100),
+          text: code,
+          fontSize,
+        },
+      ];
+    });
+  }
+
+  // 이미지로드시 캔버스 사이즈 설정
   useEffect(() => {
-    return () => {
-      if (imageUrl) {
-        URL.revokeObjectURL(imageUrl);
-      }
-    };
-  }, [imageUrl]);
+    if (!image) return;
 
-  useEffect(() => {
-    function handleCanvasLimitSize() {
-      if (!image) return;
-      const canvasSize = calculateCanvasSize(image);
-      setCanvasSize(canvasSize);
-    }
-
-    handleCanvasLimitSize();
-
-    window.addEventListener("resize", handleCanvasLimitSize);
-
-    return () => {
-      window.removeEventListener("resize", handleCanvasLimitSize);
-    };
+    const canvasSize = calculateCanvasSize(image);
+    setCanvasSize(canvasSize);
   }, [image]);
 
+  // 반응형 캔버스 scale 업데이트
   useEffect(() => {
-    if (!image || blocks.length) return;
+    function handleResize() {
+      if (!image) return;
+      const resizedSize = calculateCanvasSize(image);
+      const scaleX = resizedSize.width / canvasSize.width;
+      const scaleY = resizedSize.height / canvasSize.height;
+
+      setScale({ x: scaleX, y: scaleY });
+    }
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, [canvasSize, image]);
+
+  // OCR
+  useEffect(() => {
+    if (!image || blocks.length || canvasSize.width === 0) return;
 
     (async function getOCRData() {
       try {
@@ -316,14 +321,18 @@ export default function useCanvasApi() {
         await worker.setParameters({
           tessedit_pageseg_mode: PSM.AUTO,
         });
-
         const { data } = await worker.recognize(image);
+
+        const scaleX = canvasSize.width / image.width;
+        const scaleY = canvasSize.height / image.height;
+
         const blocks = data.paragraphs.map((item) => ({
-          x: item.bbox.x0,
-          y: item.bbox.y0,
-          width: item.bbox.x1 - item.bbox.x0,
-          height: item.bbox.y1 - item.bbox.y0,
           id: `rect-${uuidv4()}`,
+          x: item.bbox.x0 * scaleX,
+          y: item.bbox.y0 * scaleY,
+          width: (item.bbox.x1 - item.bbox.x0) * scaleX,
+          height: (item.bbox.y1 - item.bbox.y0) * scaleY,
+          type: "ocr",
         }));
 
         setBlocks(blocks.slice(0, -1));
@@ -343,8 +352,9 @@ export default function useCanvasApi() {
       }
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [image]);
+  }, [image, canvasSize]);
 
+  // 캔버스영역 바깥에서 클릭시
   useEffect(() => {
     function handleClickOutSizeCanvas(e: MouseEvent) {
       const target = e.target as HTMLElement;
@@ -356,10 +366,9 @@ export default function useCanvasApi() {
 
         // 마우스가 캔버스 밖으로 나가면, 그리고있던 사각형이 있으면 완성해주기
         if (newRectangle) {
-          isDrawing.current = false;
           const { width, height } = newRectangle;
           if (Math.abs(width || 0) > 5 && Math.abs(height || 0) > 5) {
-            setRectangles((prev) => {
+            setItems((prev) => {
               return [...prev, { ...newRectangle, id: `rect-${uuidv4()}` }];
             });
           }
@@ -391,22 +400,22 @@ export default function useCanvasApi() {
   });
 
   return {
+    image,
+    imageUrl,
     stageRef,
     containerRef,
     fileRef,
-    transformerRef,
-    image,
-    imageUrl,
     canvasSize,
-    rectangles,
+    scale,
     newRectangle,
     selectedId,
     color,
     opacity,
     isOCRLoading,
     isOCRMode,
-    isHide,
+    isMaskMode,
     blocks,
+    items,
     handleSelected,
     handleImage,
     handleUpload,
@@ -420,6 +429,7 @@ export default function useCanvasApi() {
     handleRefresh,
     handleToggleHide,
     handleSelectDelete,
-    handleUpdateRect,
+    handleUpdateItems,
+    handleEmoji,
   };
 }

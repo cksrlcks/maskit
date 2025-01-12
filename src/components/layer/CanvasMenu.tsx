@@ -15,16 +15,18 @@ import {
   EyeOff,
   Images,
   Loader2,
+  Smile,
   Sticker,
   Trash2,
   WandSparkles,
 } from "lucide-react";
 import { HexColorPicker } from "react-colorful";
 import { AnimatePresence, motion } from "motion/react";
+import EmojiPicker from "../EmojiPicker/EmojiPicker";
 
 export function CanvasMenu() {
   const {
-    isHide,
+    isMaskMode,
     image,
     color,
     selectedId,
@@ -35,6 +37,7 @@ export function CanvasMenu() {
     handleRefresh,
     handleToggleHide,
     handleSelectDelete,
+    handleEmoji,
     isOCRLoading,
   } = useCanvas();
 
@@ -111,23 +114,33 @@ export function CanvasMenu() {
                   <span className="sr-only"></span>
                 </button>
               </div>
+              <div className="mb-2 mt-4 block sm:hidden">
+                <Slider
+                  defaultValue={[1]}
+                  onValueChange={([opacity]) => handleOpacity(opacity)}
+                  max={1}
+                  step={0.1}
+                />
+              </div>
             </PopoverContent>
           </Popover>
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button variant="outline" size="icon">
-                <Droplet className="h-[1.2rem] w-[1.2rem]" />
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-36">
-              <Slider
-                defaultValue={[1]}
-                onValueChange={([opacity]) => handleOpacity(opacity)}
-                max={1}
-                step={0.1}
-              />
-            </PopoverContent>
-          </Popover>
+          <div className="hidden sm:block">
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button variant="outline" size="icon">
+                  <Droplet className="h-[1.2rem] w-[1.2rem]" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-36">
+                <Slider
+                  defaultValue={[1]}
+                  onValueChange={([opacity]) => handleOpacity(opacity)}
+                  max={1}
+                  step={0.1}
+                />
+              </PopoverContent>
+            </Popover>
+          </div>
           <Popover>
             <PopoverTrigger asChild>
               <Button variant="outline" size="icon">
@@ -136,8 +149,18 @@ export function CanvasMenu() {
             </PopoverTrigger>
             <PopoverContent className="w-96">
               <div className="flex items-center justify-center py-5 text-sm opacity-40">
-                워터마크, 스티커 준비중
+                워터마크 준비중
               </div>
+            </PopoverContent>
+          </Popover>
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button variant="outline" size="icon">
+                <Smile className="h-[1.2rem] w-[1.2rem]" />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-full max-w-72">
+              <EmojiPicker onClick={handleEmoji} />
             </PopoverContent>
           </Popover>
         </div>
@@ -177,15 +200,15 @@ export function CanvasMenu() {
           <Button
             variant="outline"
             size="icon"
-            title={isHide ? "보이기" : "가리기"}
+            title={isMaskMode ? "보이기" : "가리기"}
             onClick={handleToggleHide}
           >
-            {isHide ? (
+            {isMaskMode ? (
               <EyeOff className="h-[1.2rem] w-[1.2rem]" />
             ) : (
               <Eye className="h-[1.2rem] w-[1.2rem]" />
             )}
-            <span className="sr-only">{isHide ? "보이기" : "가리기"}</span>
+            <span className="sr-only">{isMaskMode ? "보이기" : "가리기"}</span>
           </Button>
           <AnimatePresence mode="popLayout">
             {selectedId && (

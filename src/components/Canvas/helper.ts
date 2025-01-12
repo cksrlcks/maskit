@@ -37,15 +37,12 @@ export function calculateCanvasSize({
     }
   }
 
-  const scaleX = targetWidth / imageWidth;
-  const scaleY = targetHeight / imageHeight;
-
   return {
     width: Math.round(targetWidth),
     height: Math.round(targetHeight),
     scale: {
-      x: scaleX,
-      y: scaleY,
+      x: 1,
+      y: 1,
     },
   };
 }

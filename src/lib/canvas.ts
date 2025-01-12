@@ -5,7 +5,6 @@ export function mergeCanvasWithImage(canvas: HTMLCanvasElement, image: HTMLImage
   const context = _canvas.getContext("2d");
 
   if (!context) return null;
-
   context.drawImage(image, 0, 0, image.width, image.height);
   context.drawImage(canvas, 0, 0, canvas.width, canvas.height, 0, 0, image.width, image.height);
 
