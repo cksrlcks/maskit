@@ -28,6 +28,7 @@ type handleImageType = "download" | "copy" | "mail" | "share" | "kakao";
 export default function useCanvasApi() {
   const { image, imageUrl, handleUpload, resetImage } = useImage();
 
+  const [isLoading, setIsLoading] = useState(false);
   const [blocks, setBlocks] = useState<CanvasItemConfig[]>([]);
   const [items, setItems] = useState<CanvasItemConfig[]>([]);
   const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0, scale: { x: 1, y: 1 } });
@@ -53,33 +54,19 @@ export default function useCanvasApi() {
       if (!canvas) return;
 
       if (type === "download") {
-        canvasDownload(canvas);
-
         toast({
           duration: 2000,
           title: "이미지를 저장합니다.",
           description: "곧 이미지 저장이 시작됩니다.",
         });
-      } else if (type === "copy") {
-        try {
-          await copyClipboard(canvas);
 
-          toast({
-            duration: 2000,
-            title: "복사 완료",
-            description: "성공적으로 클립보드에 이미지를 복사했습니다.",
-          });
-        } catch (error) {
-          console.error(error);
-          toast({
-            duration: 2000,
-            variant: "destructive",
-            title: "문제가 발생했어요.",
-            description: "예상치못한 에러가 발생하여, 이미지를 복사하지 못했습니다.",
-          });
-        }
-      } else if (type === "share") {
+        return canvasDownload(canvas);
+      }
+
+      if (type === "share") {
+        setIsLoading(true);
         const file = await convertToFileBlob(canvas);
+        setIsLoading(false);
 
         try {
           if (navigator.share) {
@@ -104,49 +91,47 @@ export default function useCanvasApi() {
             description: "공유하기를 중단하였거나 문제가 있습니다.",
           });
         }
+
+        return;
+      }
+
+      try {
+        setIsLoading(true);
+        await copyClipboard(canvas);
+        setIsLoading(false);
+      } catch (error) {
+        console.log(error);
+        toast({
+          duration: 2000,
+          variant: "destructive",
+          title: "문제가 발생했어요.",
+          description: "예상치못한 에러가 발생하여, 이미지를 복사하지 못했습니다.",
+        });
+      }
+
+      if (type === "copy") {
+        toast({
+          duration: 2000,
+          title: "복사 완료",
+          description: "성공적으로 클립보드에 이미지를 복사했습니다.",
+        });
       } else if (type === "mail") {
-        try {
-          await copyClipboard(canvas);
+        toast({
+          duration: 2000,
+          title: "복사 완료",
+          description: "메일본문에 붙여넣기 해주세요",
+        });
 
-          toast({
-            duration: 2000,
-            title: "복사 완료",
-            description: "메일본문에 붙여넣기 해주세요",
-          });
-
-          const link = "mailto:?subject=MASKIT";
-          window.location.href = link;
-        } catch (error) {
-          console.log(error);
-
-          toast({
-            duration: 2000,
-            variant: "destructive",
-            title: "문제가 발생했어요.",
-            description: "예상치못한 에러가 발생하여, 이미지를 복사하지 못했습니다.",
-          });
-        }
+        const link = "mailto:?subject=MASKIT";
+        window.location.href = link;
       } else if (type === "kakao") {
-        try {
-          await copyClipboard(canvas);
+        toast({
+          duration: 2000,
+          title: "복사 완료",
+          description: "카카오톡 메세지에서 붙여넣기 해주세요.",
+        });
 
-          window.open("kakaotalk://launch", "_blank");
-
-          toast({
-            duration: 2000,
-            title: "복사 완료",
-            description: "카카오톡 메세지에서 붙여넣기 해주세요.",
-          });
-        } catch (error) {
-          console.error(error);
-
-          toast({
-            duration: 2000,
-            variant: "destructive",
-            title: "문제가 발생했어요.",
-            description: "예상치못한 에러가 발생하여, 이미지를 복사하지 못했습니다.",
-          });
-        }
+        window.open("kakaotalk://launch", "_blank");
       }
     },
     [image],
@@ -398,6 +383,7 @@ export default function useCanvasApi() {
   });
 
   return {
+    isLoading,
     image,
     imageUrl,
     stageRef,
