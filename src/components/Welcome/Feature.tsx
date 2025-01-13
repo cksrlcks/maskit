@@ -4,6 +4,7 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 import feature1 from "@/assets/img/feature-1.svg";
 import feature2 from "@/assets/img/feature-2.svg";
 import feature3 from "@/assets/img/feature-3.svg";
+import clsx from "clsx";
 
 const feature = [
   {
@@ -31,13 +32,23 @@ const feature = [
 
 export function Feature({ onClose }: { onClose: () => void }) {
   const [stage, setStage] = useState(0);
-  const { image, title, content } = feature[stage];
+  const { title, content } = feature[stage];
 
   return (
     <div className="p-6">
       <div className="max-w-[400px] overflow-hidden rounded-md bg-white">
-        <figure>
-          <img src={image} alt={title} />
+        <figure className="relative aspect-[5/3] bg-slate-50">
+          {feature.map((item) => (
+            <img
+              key={item.id}
+              src={item.image}
+              className={clsx(
+                "pointer-events-none absolute left-0 top-0 h-full w-full transition-opacity",
+                stage === item.id - 1 ? "opacity-1" : "opacity-0",
+              )}
+              alt={item.title}
+            />
+          ))}
         </figure>
         <div className="break-keep p-6">
           <div className="mb-6">
