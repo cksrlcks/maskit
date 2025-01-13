@@ -1,4 +1,14 @@
-import { Menu, Download, Copy, Share, Info, Mail, MessageCircle, Smartphone } from "lucide-react";
+import {
+  Menu,
+  Download,
+  Copy,
+  Share,
+  Info,
+  Mail,
+  MessageCircle,
+  Smartphone,
+  Sparkles,
+} from "lucide-react";
 import {
   Button,
   DropdownMenuLabel,
@@ -25,14 +35,21 @@ import {
 import { useCanvas } from "@/context/CanvasContext";
 import { useState } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
+import { Feature } from "../Welcome";
 
 export function RootMenu() {
   const { image, handleImage } = useCanvas();
   const [isHelpOpen, setIsHelpOpen] = useState(false);
+  const [isFeatureOpen, setIsFeatureOpen] = useState(false);
 
   useHotkeys("shift+?, ?, shfit+/", (e) => {
     e.preventDefault();
     setIsHelpOpen(true);
+  });
+
+  useHotkeys("shift+!, !", (e) => {
+    e.preventDefault();
+    setIsFeatureOpen(true);
   });
 
   return (
@@ -78,6 +95,11 @@ export function RootMenu() {
             </DropdownMenuPortal>
           </DropdownMenuSub>
           <DropdownMenuSeparator />
+          <DropdownMenuItem onClick={() => setIsFeatureOpen(true)}>
+            <Sparkles />
+            마스킷 기능
+            <DropdownMenuShortcut>!</DropdownMenuShortcut>
+          </DropdownMenuItem>
           <DropdownMenuItem onClick={() => setIsHelpOpen(true)}>
             <Info />
             궁금해요
@@ -102,6 +124,15 @@ export function RootMenu() {
               <AccordionContent>마음껏 쓰셔도 됩니다.</AccordionContent>
             </AccordionItem>
           </Accordion>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isFeatureOpen} onOpenChange={setIsFeatureOpen}>
+        <DialogContent
+          className="max-w-[400px] overflow-hidden rounded-md border-none bg-transparent p-0 shadow-none"
+          showCloseButton={false}
+        >
+          <Feature onClose={() => setIsFeatureOpen(false)} />
         </DialogContent>
       </Dialog>
     </>
