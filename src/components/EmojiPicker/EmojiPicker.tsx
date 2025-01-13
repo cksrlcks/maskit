@@ -16,7 +16,7 @@ export default function EmojiPicker({ onClick }: EmojiPicker) {
   }
 
   return (
-    <Tabs defaultValue={emojisGroup[0].id} className="font-emoji w-full">
+    <Tabs defaultValue={emojisGroup[0].id} className="w-full font-emoji">
       <TabsList className="w-full">
         {emojisGroup.map(({ id, emojis }) => (
           <TabsTrigger key={id} value={id}>
@@ -32,7 +32,7 @@ export default function EmojiPicker({ onClick }: EmojiPicker) {
               <li key={emoji}>
                 <button
                   type="button"
-                  className="aspect-square w-full rounded-sm border border-transparent bg-slate-50 p-1 text-xl hover:border-slate-200"
+                  className="aspect-square w-full rounded-sm border border-transparent bg-muted p-1 text-xl hover:bg-slate-200 dark:hover:bg-white"
                   onClick={handleClick}
                   data-code={emoji}
                 >

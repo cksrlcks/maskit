@@ -55,7 +55,7 @@ export function CanvasMenu() {
             <PopoverTrigger asChild>
               <Button variant="outline" size="icon" title="zinc">
                 <span
-                  className="h-[1.2rem] w-[1.2rem] rounded-sm"
+                  className="h-[1.2rem] w-[1.2rem] rounded-sm border"
                   style={{ background: color }}
                 ></span>
               </Button>
@@ -75,7 +75,7 @@ export function CanvasMenu() {
                 </button>
                 <button
                   type="button"
-                  className="h-8 w-8 rounded-md"
+                  className="h-8 w-8 rounded-md dark:border"
                   onClick={() => handleColor("#000")}
                   style={{ background: "#000" }}
                 >
@@ -83,7 +83,7 @@ export function CanvasMenu() {
                 </button>
                 <button
                   type="button"
-                  className="h-8 w-8 rounded-md"
+                  className="h-8 w-8 rounded-md dark:border"
                   onClick={() => handleColor("#ef4444")}
                   style={{ background: "#ef4444" }}
                 >
@@ -91,7 +91,7 @@ export function CanvasMenu() {
                 </button>
                 <button
                   type="button"
-                  className="h-8 w-8 rounded-md"
+                  className="h-8 w-8 rounded-md dark:border"
                   onClick={() => handleColor("#fbbf24")}
                   style={{ background: "#fbbf24" }}
                 >
@@ -99,7 +99,7 @@ export function CanvasMenu() {
                 </button>
                 <button
                   type="button"
-                  className="h-8 w-8 rounded-md border"
+                  className="h-8 w-8 rounded-md dark:border"
                   onClick={() => handleColor("#4ade80")}
                   style={{ background: "#4ade80" }}
                 >
@@ -107,7 +107,7 @@ export function CanvasMenu() {
                 </button>
                 <button
                   type="button"
-                  className="h-8 w-8 rounded-md border"
+                  className="h-8 w-8 rounded-md dark:border"
                   onClick={() => handleColor("#60a5fa")}
                   style={{ background: "#60a5fa" }}
                 >
