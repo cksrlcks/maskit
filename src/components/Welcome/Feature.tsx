@@ -36,7 +36,7 @@ export function Feature({ onClose }: { onClose: () => void }) {
 
   return (
     <div className="p-6">
-      <div className="max-w-[400px] overflow-hidden rounded-md bg-white">
+      <div className="max-w-[400px] overflow-hidden rounded-md bg-background dark:border">
         <figure className="relative aspect-[5/3] bg-slate-50">
           {feature.map((item) => (
             <img
