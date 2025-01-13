@@ -13,8 +13,8 @@ export default function useImage() {
     };
   }, [imageUrl]);
 
-  function handleUpload(e: ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
+  function handleUpload(files: File[]) {
+    const file = files?.[0];
     if (file) {
       const url = URL.createObjectURL(file);
       setImageUrl(url);
