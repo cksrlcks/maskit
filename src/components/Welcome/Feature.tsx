@@ -1,25 +1,28 @@
 import { useState } from "react";
 import { Button } from "../ui";
 import { ArrowLeft, ArrowRight } from "lucide-react";
+import feature1 from "@/assets/img/feature-1.svg";
+import feature2 from "@/assets/img/feature-2.svg";
+import feature3 from "@/assets/img/feature-3.svg";
 
 const feature = [
   {
     id: 1,
-    image: "/feature-1.svg",
+    image: feature1,
     title: "무엇이든 마스킹하세요.",
     content:
       "마우스(터치)를 사용해서 영역을 마스킹하세요. 마스킹한 부분을 크기조정, 투명조절까지 가능합니다.",
   },
   {
     id: 2,
-    image: "/feature-2.svg",
+    image: feature2,
     title: "이모지를 사용해보세요.",
     content:
       "다양한 이모지를 활용하여 이미지를 꾸미거나 표현을 더 풍성하게 만들어보세요. 손쉽게 크기를 조절하고 배치할 수 있습니다.",
   },
   {
     id: 3,
-    image: "/feature-3.svg",
+    image: feature3,
     title: "텍스트를 자동으로 가려드려요",
     content:
       "이미지에서 텍스트 영역을 감지하여 자동으로 가려주는 기능을 제공합니다. 원클릭으로 쉽게 텍스트를 숨길 수 있습니다.",
