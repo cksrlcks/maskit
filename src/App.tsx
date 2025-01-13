@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { AppCanvas, AppProvider, AppDialog, AppFooter, AppLayer, AppMenu } from "./layouts";
+import { Welcome } from "./components/Welcome";
 
 export default function App() {
   useEffect(() => {
@@ -22,6 +23,7 @@ export default function App() {
 
   return (
     <AppProvider>
+      <Welcome />
       <AppLayer>
         <AppMenu />
         <AppFooter />

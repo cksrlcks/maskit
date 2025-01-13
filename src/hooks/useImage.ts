@@ -29,6 +29,7 @@ export default function useImage() {
 
   function resetImage() {
     setImage(null);
+    setImageUrl(null);
   }
 
   return {

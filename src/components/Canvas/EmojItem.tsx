@@ -5,7 +5,7 @@ import { useEffect, useRef } from "react";
 import { Text, Transformer } from "react-konva";
 
 export function EmojiItem({ item }: { item: TextConfig }) {
-  const { isMaskMode, selectedId, handleUpdateItems, handleSelected } = useCanvas();
+  const { opacity, isMaskMode, selectedId, handleUpdateItems, handleSelected } = useCanvas();
   const textRef = useRef<Konva.Text | null>(null);
   const transformerRef = useRef<Konva.Transformer | null>(null);
   const isSelected = selectedId === item.id;
@@ -28,6 +28,7 @@ export function EmojiItem({ item }: { item: TextConfig }) {
             handleSelected(item.id || null);
           }
         }}
+        opacity={!isMaskMode ? 0 : opacity}
         onDragEnd={(e) => {
           const node = e.target;
           const updated = {
