@@ -15,9 +15,12 @@ import clsx from "clsx";
 import useGoogleDrive from "@/hooks/useGoogleDrive";
 import useDropbox from "@/hooks/useDropbox";
 import { Loading } from "./Loading";
+import { useHotkeys } from "react-hotkeys-hook";
+import { toast } from "@/hooks/useToast";
+import { getClipboardImage } from "@/lib/utils";
 
 export function Upload() {
-  const { handleUpload, handleUploadByBlob } = useCanvas();
+  const { handleUpload, handleUploadByBlob, image, imageUrl } = useCanvas();
   const { getRootProps, getInputProps, open, isDragAccept, isDragReject } = useDropzone({
     accept: {
       "image/png": [],
@@ -52,6 +55,26 @@ export function Upload() {
       handleUploadByBlob(dropboxBlob);
     }
   }, [dropboxBlob, handleUploadByBlob]);
+
+  useHotkeys("cmd+v, ctrl+v, meta+v", async (e) => {
+    e.preventDefault();
+    if (image || imageUrl) return;
+
+    try {
+      const blob = await getClipboardImage();
+
+      if (blob) {
+        handleUploadByBlob(blob);
+      }
+    } catch (error) {
+      console.error(error);
+      toast({
+        duration: 2000,
+        title: "붙여넣기에 실패했습니다.",
+        description: "붙여넣을수 없는 형식입니다.",
+      });
+    }
+  });
 
   if (googleDriveLoading) return <Loading>구글드라이브에서 데이터를 가져오고 있어요</Loading>;
   if (dropboxLoading) return <Loading>드롭박스에서 데이터를 가져오고 있어요</Loading>;
