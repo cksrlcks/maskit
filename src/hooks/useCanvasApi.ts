@@ -26,7 +26,7 @@ type CanvasItemConfig = RectConfig | ImageConfig | TextConfig;
 type handleImageType = "download" | "copy" | "mail" | "share" | "kakao";
 
 export default function useCanvasApi() {
-  const { image, imageUrl, imageType, handleUpload, handleUploadByBlob } = useImage();
+  const { image, imageUrl, imageType, imageName, handleUpload, handleUploadByBlob } = useImage();
 
   const [isLoading, setIsLoading] = useState(false);
   const [blocks, setBlocks] = useState<CanvasItemConfig[]>([]);
@@ -61,7 +61,7 @@ export default function useCanvasApi() {
           description: "곧 이미지 저장이 시작됩니다.",
         });
 
-        return canvasDownload(canvas);
+        return canvasDownload(imageName, canvas);
       }
 
       if (type === "share") {

@@ -1,9 +1,13 @@
+import { getFileNameAndExt } from "@/lib/utils";
 import { useEffect, useState } from "react";
 
 export default function useImage() {
   const [image, setImage] = useState<HTMLImageElement | null>(null);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
-  const [imageType, setImageType] = useState<"jpg" | "jpeg" | "png" | "svg" | undefined>(undefined);
+  const [imageType, setImageType] = useState<"jpg" | "jpeg" | "png" | "svg" | "webp" | undefined>(
+    undefined,
+  );
+  const [imageName, setImageName] = useState("");
 
   // 이미지 url objecturl revoke
   useEffect(() => {
@@ -17,22 +21,27 @@ export default function useImage() {
   function handleUpload(files: File[]) {
     const file = files?.[0];
     if (file) {
-      //todo : refactoring
-      const fileExt = file.name.split(".").pop()?.toLowerCase();
-      if (fileExt === "jpg" || fileExt === "jpeg" || fileExt === "png" || fileExt === "svg") {
+      //todo : refactoring (enum 사용해보기)
+      const [fileName, fileExt] = getFileNameAndExt(file.name);
+      if (
+        fileExt === "jpg" ||
+        fileExt === "jpeg" ||
+        fileExt === "png" ||
+        fileExt === "svg" ||
+        fileExt === "webp"
+      ) {
         setImageType(fileExt);
-      } else {
-        setImageType(undefined);
+        setImageName(fileName);
+
+        const url = URL.createObjectURL(file);
+        setImageUrl(url);
+        const img = new Image();
+
+        img.src = url;
+        img.onload = () => {
+          setImage(img);
+        };
       }
-
-      const url = URL.createObjectURL(file);
-      setImageUrl(url);
-      const img = new Image();
-
-      img.src = url;
-      img.onload = () => {
-        setImage(img);
-      };
     }
   }
 
@@ -56,6 +65,7 @@ export default function useImage() {
     image,
     imageUrl,
     imageType,
+    imageName,
     handleUpload,
     handleUploadByBlob,
     resetImage,

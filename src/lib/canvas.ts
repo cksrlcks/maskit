@@ -42,9 +42,9 @@ export async function convertToFileBlob(canvas: HTMLCanvasElement) {
   return new File([blob], "maskit.png", { type: "image/png" });
 }
 
-export function canvasDownload(canvas: HTMLCanvasElement) {
+export function canvasDownload(imageName: string, canvas: HTMLCanvasElement) {
   const link = document.createElement("a");
-  link.download = "maskit.png";
+  link.download = `${imageName}_maskit.png`;
   link.href = canvas.toDataURL();
   document.body.appendChild(link);
   link.click();

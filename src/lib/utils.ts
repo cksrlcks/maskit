@@ -23,3 +23,10 @@ export async function getClipboardImage() {
     throw Error("클립보드에서 이미지를 가져오는 중 오류가 발생했습니다:");
   }
 }
+
+export function getFileNameAndExt(filePath: string) {
+  const lastDotIndex = filePath.lastIndexOf(".");
+  const name = filePath.slice(0, lastDotIndex);
+  const ext = filePath.slice(lastDotIndex + 1);
+  return [name, ext];
+}
