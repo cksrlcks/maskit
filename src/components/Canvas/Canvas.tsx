@@ -2,7 +2,7 @@ import { Stage, Layer } from "react-konva";
 import { useCanvas } from "@/context/CanvasContext";
 import { RectItem } from "./RectItem";
 import { EmojiItem } from "./EmojItem";
-import { Loading } from "./Loading";
+import { LoadingSpinner } from "./LoadingSpinner";
 import { isMobile } from "react-device-detect";
 
 export function Canvas() {
@@ -28,7 +28,7 @@ export function Canvas() {
 
   return (
     <>
-      {isLoading && isMobile && <Loading />}
+      {isLoading && isMobile && <LoadingSpinner />}
       <div
         className="fixed bottom-0 left-0 right-0 top-0 flex h-full w-full items-center justify-center"
         ref={containerRef}
