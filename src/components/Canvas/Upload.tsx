@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useCanvas } from "@/context/CanvasContext";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, HardDrive } from "lucide-react";
 import {
   Badge,
   DropdownMenu,
@@ -122,6 +122,15 @@ export function Upload() {
                     </button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
+                    <DropdownMenuItem
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        open();
+                      }}
+                    >
+                      <HardDrive className="h-4 w-4" />
+                      PC에서 가져오기
+                    </DropdownMenuItem>
                     <DropdownMenuItem onClick={handleDropboxPicker}>
                       <img src={dropboxIcon} alt="dropdown" className="h-4 w-4" />
                       Dropbox
