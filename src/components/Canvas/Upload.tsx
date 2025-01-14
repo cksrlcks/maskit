@@ -24,7 +24,7 @@ export function Upload() {
       "image/png": [],
       "image/jpg": [],
       "image/jpeg": [],
-      "image/svg": [],
+      "image/svg+xml": [],
       "image/webp": [],
     },
     multiple: false,
