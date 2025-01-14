@@ -26,7 +26,7 @@ type CanvasItemConfig = RectConfig | ImageConfig | TextConfig;
 type handleImageType = "download" | "copy" | "mail" | "share" | "kakao";
 
 export default function useCanvasApi() {
-  const { image, imageUrl, handleUpload } = useImage();
+  const { image, imageUrl, imageType, handleUpload, handleUploadByBlob } = useImage();
 
   const [isLoading, setIsLoading] = useState(false);
   const [blocks, setBlocks] = useState<CanvasItemConfig[]>([]);
@@ -300,7 +300,18 @@ export default function useCanvasApi() {
 
   // OCR
   useEffect(() => {
-    if (!image || blocks.length || canvasSize.width === 0) return;
+    if (!image || !imageUrl || blocks.length || canvasSize.width === 0) return;
+
+    if (imageType === "svg") {
+      toast({
+        duration: 2000,
+        variant: "destructive",
+        title: "문자감지가 지원되지 않는 이미지 형식입니다.",
+        description: "문자인식을 실패했습니다.",
+      });
+      setIsOCRLoading(false);
+      return;
+    }
 
     (async function getOCRData() {
       try {
@@ -408,6 +419,7 @@ export default function useCanvasApi() {
     handleSelected,
     handleImage,
     handleUpload,
+    handleUploadByBlob,
     handleMouseMove,
     handleMouseDown,
     handleMouseUp,
