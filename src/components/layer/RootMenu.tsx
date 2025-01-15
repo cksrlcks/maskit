@@ -132,6 +132,10 @@ export function RootMenu() {
           className="max-w-[400px] overflow-hidden rounded-md border-none bg-transparent p-0 shadow-none"
           showCloseButton={false}
         >
+          <DialogHeader className="sr-only">
+            <DialogTitle>MAKIT 소개</DialogTitle>
+            <DialogDescription>MAKIT 소개</DialogDescription>
+          </DialogHeader>
           <Feature onClose={() => setIsFeatureOpen(false)} />
         </DialogContent>
       </Dialog>
