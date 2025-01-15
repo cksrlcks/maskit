@@ -258,9 +258,9 @@ export default function useCanvasApi() {
   function handleEmoji(code: string) {
     setItems((prev) => {
       const id = `emoji-${uuidv4()}`;
-      const fontSize = canvasSize.width * scale.x * 0.25;
-      const scaledWidth = canvasSize.width * scale.x;
-      const scaledHeight = canvasSize.height * scale.y;
+      const fontSize = canvasSize.width * 0.25;
+      const scaledWidth = canvasSize.width;
+      const scaledHeight = canvasSize.height;
       return [
         ...prev,
         {
