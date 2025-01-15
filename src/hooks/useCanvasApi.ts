@@ -46,6 +46,8 @@ export default function useCanvasApi() {
   const fileRef = useRef<HTMLInputElement | null>(null);
   const ocrResultRef = useRef<RectConfig[] | null>(null);
 
+  const displayScale = Math.floor((canvasSize.width / (image?.width || 1)) * 100 * scale.x);
+
   const handleImage = useCallback(
     async function handleImage(type: handleImageType) {
       if (!stageRef.current || !image) return;
@@ -275,6 +277,28 @@ export default function useCanvasApi() {
     });
   }
 
+  function handleZoom(amount: number) {
+    setScale((prev) => {
+      if (displayScale > 200 || displayScale < 10) {
+        return prev;
+      }
+
+      return { x: prev.x + amount, y: prev.x + amount };
+    });
+  }
+
+  const handleResize = useCallback(
+    function handleResize() {
+      if (!image) return;
+      const resizedSize = calculateCanvasSize(image);
+      const scaleX = resizedSize.width / canvasSize.width;
+      const scaleY = resizedSize.height / canvasSize.height;
+
+      setScale({ x: scaleX, y: scaleY });
+    },
+    [canvasSize, image],
+  );
+
   // 이미지로드시 캔버스 사이즈 설정
   useEffect(() => {
     if (!image) return;
@@ -285,18 +309,9 @@ export default function useCanvasApi() {
 
   // 반응형 캔버스 scale 업데이트
   useEffect(() => {
-    function handleResize() {
-      if (!image) return;
-      const resizedSize = calculateCanvasSize(image);
-      const scaleX = resizedSize.width / canvasSize.width;
-      const scaleY = resizedSize.height / canvasSize.height;
-
-      setScale({ x: scaleX, y: scaleY });
-    }
-
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
-  }, [canvasSize, image]);
+  }, [handleResize]);
 
   // OCR
   useEffect(() => {
@@ -388,21 +403,18 @@ export default function useCanvasApi() {
     function wheelZoom(e: WheelEvent) {
       if (e.ctrlKey || e.metaKey) {
         setScale((prev) => {
-          let newScale = e.deltaY > 0 ? prev.x - 0.1 : prev.x + 0.1;
-
-          if (newScale > 3) {
-            newScale = 3;
-          } else if (newScale < 0.8) {
-            newScale = 0.8;
+          if ((e.deltaY < 0 && displayScale > 200) || (e.deltaY > 0 && displayScale < 10)) {
+            return prev;
           }
 
+          const newScale = e.deltaY > 0 ? prev.x - 0.1 : prev.x + 0.1;
           return { x: newScale, y: newScale };
         });
       }
     }
     window.addEventListener("wheel", wheelZoom);
     return () => window.removeEventListener("wheel", wheelZoom);
-  }, []);
+  }, [displayScale]);
 
   useHotkeys("cmd+s, ctrl+s, meta+s", (e) => {
     e.preventDefault();
@@ -437,6 +449,7 @@ export default function useCanvasApi() {
     isMaskMode,
     blocks,
     items,
+    displayScale,
     setScale,
     handleSelected,
     handleImage,
@@ -454,5 +467,7 @@ export default function useCanvasApi() {
     handleSelectDelete,
     handleUpdateItems,
     handleEmoji,
+    handleZoom,
+    handleResize,
   };
 }
