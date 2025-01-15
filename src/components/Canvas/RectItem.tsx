@@ -41,12 +41,13 @@ export function RectItem({ item }: { item: RectConfig }) {
           };
           handleUpdateItems(updated);
         }}
+        keepRatio={item.type === "emoji"}
         draggable={isMaskMode}
       />
       {isSelected && isMaskMode && (
         <Transformer
           ref={transformerRef}
-          keepRatio
+          keepRatio={item.type === "emoji"}
           padding={6}
           ignoreStroke={true}
           boundBoxFunc={(_, newBox) => {
