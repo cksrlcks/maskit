@@ -3,3 +3,4 @@ export * from "./ShareMenu";
 export * from "./ThemeMenu";
 export * from "./CanvasMenu";
 export * from "./RootMenu";
+export * from "./ZoomMenu";

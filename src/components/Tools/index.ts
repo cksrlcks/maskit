@@ -7,3 +7,5 @@ export * from "./Reset";
 export * from "./Eye";
 export * from "./Delete";
 export * from "./Ocr";
+export * from "./Zoom";
+export * from "./ZoomReset";
