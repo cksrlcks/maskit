@@ -39,6 +39,7 @@
     "react-hotkeys-hook": "^4.6.1",
     "react-konva": "^18.2.10",
     "tailwind-merge": "^2.6.0",
+    "tailwind-scrollbar-hide": "^2.0.0",
     "tailwindcss-animate": "^1.0.7",
     "tesseract.js": "^5.1.1",
     "use-image": "^1.1.1",

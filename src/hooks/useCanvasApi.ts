@@ -46,6 +46,8 @@ export default function useCanvasApi() {
   const fileRef = useRef<HTMLInputElement | null>(null);
   const ocrResultRef = useRef<RectConfig[] | null>(null);
 
+  const displayScale = Math.floor((canvasSize.width / (image?.width || 1)) * 100 * scale.x);
+
   const handleImage = useCallback(
     async function handleImage(type: handleImageType) {
       if (!stageRef.current || !image) return;
@@ -151,8 +153,8 @@ export default function useCanvasApi() {
       setNewRectangle({
         type: "rect",
         id: `rect-${uuidv4()}`,
-        x: position.x,
-        y: position.y,
+        x: position.x / scale.x,
+        y: position.y / scale.y,
         width: 0,
         height: 0,
       });
@@ -168,8 +170,8 @@ export default function useCanvasApi() {
       setNewRectangle((prev) => {
         return {
           ...prev,
-          width: position.x - (prev?.x || 0),
-          height: position.y - (prev?.y || 0),
+          width: position.x / scale.x - (prev?.x || 0),
+          height: position.y / scale.y - (prev?.y || 0),
         };
       });
     }
@@ -258,9 +260,9 @@ export default function useCanvasApi() {
   function handleEmoji(code: string) {
     setItems((prev) => {
       const id = `emoji-${uuidv4()}`;
-      const fontSize = canvasSize.width * scale.x * 0.25;
-      const scaledWidth = canvasSize.width * scale.x;
-      const scaledHeight = canvasSize.height * scale.y;
+      const fontSize = canvasSize.width * 0.25;
+      const scaledWidth = canvasSize.width;
+      const scaledHeight = canvasSize.height;
       return [
         ...prev,
         {
@@ -275,6 +277,28 @@ export default function useCanvasApi() {
     });
   }
 
+  function handleZoom(amount: number) {
+    setScale((prev) => {
+      if (displayScale > 200 || displayScale < 10) {
+        return prev;
+      }
+
+      return { x: prev.x + amount, y: prev.x + amount };
+    });
+  }
+
+  const handleResize = useCallback(
+    function handleResize() {
+      if (!image) return;
+      const resizedSize = calculateCanvasSize(image);
+      const scaleX = resizedSize.width / canvasSize.width;
+      const scaleY = resizedSize.height / canvasSize.height;
+
+      setScale({ x: scaleX, y: scaleY });
+    },
+    [canvasSize, image],
+  );
+
   // 이미지로드시 캔버스 사이즈 설정
   useEffect(() => {
     if (!image) return;
@@ -285,18 +309,9 @@ export default function useCanvasApi() {
 
   // 반응형 캔버스 scale 업데이트
   useEffect(() => {
-    function handleResize() {
-      if (!image) return;
-      const resizedSize = calculateCanvasSize(image);
-      const scaleX = resizedSize.width / canvasSize.width;
-      const scaleY = resizedSize.height / canvasSize.height;
-
-      setScale({ x: scaleX, y: scaleY });
-    }
-
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
-  }, [canvasSize, image]);
+  }, [handleResize]);
 
   // OCR
   useEffect(() => {
@@ -383,6 +398,24 @@ export default function useCanvasApi() {
     };
   }, [newRectangle]);
 
+  //휠줌
+  useEffect(() => {
+    function wheelZoom(e: WheelEvent) {
+      if (e.ctrlKey || e.metaKey) {
+        setScale((prev) => {
+          if ((e.deltaY < 0 && displayScale > 200) || (e.deltaY > 0 && displayScale < 10)) {
+            return prev;
+          }
+
+          const newScale = e.deltaY > 0 ? prev.x - 0.1 : prev.x + 0.1;
+          return { x: newScale, y: newScale };
+        });
+      }
+    }
+    window.addEventListener("wheel", wheelZoom);
+    return () => window.removeEventListener("wheel", wheelZoom);
+  }, [displayScale]);
+
   useHotkeys("cmd+s, ctrl+s, meta+s", (e) => {
     e.preventDefault();
     handleImage("download");
@@ -416,6 +449,8 @@ export default function useCanvasApi() {
     isMaskMode,
     blocks,
     items,
+    displayScale,
+    setScale,
     handleSelected,
     handleImage,
     handleUpload,
@@ -432,5 +467,7 @@ export default function useCanvasApi() {
     handleSelectDelete,
     handleUpdateItems,
     handleEmoji,
+    handleZoom,
+    handleResize,
   };
 }
