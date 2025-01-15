@@ -1,5 +1,6 @@
 import type { Config } from "tailwindcss";
 import animate from "tailwindcss-animate";
+import scrollHide from "tailwind-scrollbar-hide";
 
 export default {
   darkMode: ["class"],
@@ -83,5 +84,5 @@ export default {
   future: {
     hoverOnlyWhenSupported: true,
   },
-  plugins: [animate],
+  plugins: [animate, scrollHide],
 } satisfies Config;

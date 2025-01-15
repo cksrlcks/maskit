@@ -151,8 +151,8 @@ export default function useCanvasApi() {
       setNewRectangle({
         type: "rect",
         id: `rect-${uuidv4()}`,
-        x: position.x,
-        y: position.y,
+        x: position.x / scale.x,
+        y: position.y / scale.y,
         width: 0,
         height: 0,
       });
@@ -168,8 +168,8 @@ export default function useCanvasApi() {
       setNewRectangle((prev) => {
         return {
           ...prev,
-          width: position.x - (prev?.x || 0),
-          height: position.y - (prev?.y || 0),
+          width: position.x / scale.x - (prev?.x || 0),
+          height: position.y / scale.y - (prev?.y || 0),
         };
       });
     }
@@ -383,6 +383,27 @@ export default function useCanvasApi() {
     };
   }, [newRectangle]);
 
+  //휠줌
+  useEffect(() => {
+    function wheelZoom(e: WheelEvent) {
+      if (e.ctrlKey || e.metaKey) {
+        setScale((prev) => {
+          let newScale = e.deltaY > 0 ? prev.x - 0.1 : prev.x + 0.1;
+
+          if (newScale > 3) {
+            newScale = 3;
+          } else if (newScale < 0.8) {
+            newScale = 0.8;
+          }
+
+          return { x: newScale, y: newScale };
+        });
+      }
+    }
+    window.addEventListener("wheel", wheelZoom);
+    return () => window.removeEventListener("wheel", wheelZoom);
+  }, []);
+
   useHotkeys("cmd+s, ctrl+s, meta+s", (e) => {
     e.preventDefault();
     handleImage("download");
@@ -416,6 +437,7 @@ export default function useCanvasApi() {
     isMaskMode,
     blocks,
     items,
+    setScale,
     handleSelected,
     handleImage,
     handleUpload,
