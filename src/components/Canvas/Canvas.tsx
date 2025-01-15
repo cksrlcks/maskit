@@ -31,7 +31,7 @@ export function Canvas() {
       {isLoading && isMobile && <LoadingSpinner />}
       <div
         className="scrollbar-hide fixed bottom-0 left-0 right-0 top-0 flex h-full w-full justify-center overflow-auto p-14"
-        style={{ alignItems: "safe center" }}
+        style={{ alignItems: "safe center", justifyContent: "safe center" }}
         ref={containerRef}
       >
         <div className="rounded-xl border border-slate-200 p-2 md:p-4">
