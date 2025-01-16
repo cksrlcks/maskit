@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 export default function PrivacyPage() {
   return (
     <div className="p-4">
-      <header>
+      <header className="sticky top-4">
         <Button variant="outline" size="icon" asChild>
           <Link to="/">
             <ArrowLeft className="h-[1.2rem] w-[1.2rem]" />

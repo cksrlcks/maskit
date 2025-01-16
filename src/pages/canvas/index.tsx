@@ -3,6 +3,18 @@ import { AppCanvas, AppProvider, AppDialog, AppFooter, AppLayer, AppMenu } from 
 import { Welcome } from "@/components/Welcome";
 
 export default function CanvasPage() {
+  // 캔버스모드일때 터치액션 방지 클래스 합입
+  useEffect(() => {
+    const htmlElement = document.querySelector("html");
+
+    if (htmlElement) {
+      htmlElement.classList.add("canvas-mode");
+      return () => {
+        htmlElement.classList.remove("canvas-mode");
+      };
+    }
+  }, []);
+
   useEffect(() => {
     const preventTouchZoom = (e: TouchEvent) => {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
