@@ -8,6 +8,7 @@ import {
   MessageCircle,
   Smartphone,
   Sparkles,
+  ShieldCheck,
 } from "lucide-react";
 import {
   Button,
@@ -36,11 +37,13 @@ import { useCanvas } from "@/context/CanvasContext";
 import { useState } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 import { Feature } from "../Welcome";
+import { useNavigate } from "react-router-dom";
 
 export function RootMenu() {
-  const { image, handleImage } = useCanvas();
+  const { image, imageUrl, handleImage } = useCanvas();
   const [isHelpOpen, setIsHelpOpen] = useState(false);
   const [isFeatureOpen, setIsFeatureOpen] = useState(false);
+  const navigate = useNavigate();
 
   useHotkeys("shift+?, ?, shfit+/", (e) => {
     e.preventDefault();
@@ -51,6 +54,14 @@ export function RootMenu() {
     e.preventDefault();
     setIsFeatureOpen(true);
   });
+
+  function handlePrivacy() {
+    if (image || imageUrl) {
+      const confirm = window.confirm("작업중이던 내용이 사라집니다.");
+      if (!confirm) return;
+    }
+    navigate("/privacy", { replace: true });
+  }
 
   return (
     <>
@@ -104,6 +115,10 @@ export function RootMenu() {
             <Info />
             궁금해요
             <DropdownMenuShortcut>?</DropdownMenuShortcut>
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={handlePrivacy}>
+            <ShieldCheck />
+            개인정보처리방침
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
