@@ -5,13 +5,10 @@ import { toast } from "./useToast";
 export default function useGoogleDrive() {
   const [fileId, setFileId] = useState("");
   const [blob, setBlob] = useState<Blob | null>(null);
-  const [token, setToken] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [openPicker, authRes] = useDrivePicker();
+  const [openPicker, authResult] = useDrivePicker();
 
-  useEffect(() => {
-    setToken(authRes?.access_token || "");
-  }, [authRes]);
+  const token = authResult?.access_token;
 
   useEffect(() => {
     if (!fileId || !token) return;
