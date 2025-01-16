@@ -67,6 +67,13 @@
   }
 }
 
+@layer base {
+  .safe-center {
+    align-items: safe center;
+    justify-content: safe center;
+  }
+}
+
 html {
   touch-action: none;
   user-select: none;
