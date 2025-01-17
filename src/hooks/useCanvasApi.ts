@@ -402,6 +402,8 @@ export default function useCanvasApi() {
   useEffect(() => {
     function wheelZoom(e: WheelEvent) {
       if (e.ctrlKey || e.metaKey) {
+        e.preventDefault();
+
         setScale((prev) => {
           if ((e.deltaY < 0 && displayScale > 200) || (e.deltaY > 0 && displayScale < 10)) {
             return prev;
@@ -412,7 +414,7 @@ export default function useCanvasApi() {
         });
       }
     }
-    window.addEventListener("wheel", wheelZoom);
+    window.addEventListener("wheel", wheelZoom, { passive: false });
     return () => window.removeEventListener("wheel", wheelZoom);
   }, [displayScale]);
 
