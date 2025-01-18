@@ -1,11 +1,14 @@
-import { useCanvas } from "@/context/CanvasContext";
+import { useCanvasActions } from "@/actions/canvas";
+import { canvasAtom } from "@/atoms/canvas";
+import { useAtomValue } from "jotai";
 import Konva from "konva";
 import { RectConfig } from "konva/lib/shapes/Rect";
 import { useEffect, useRef } from "react";
 import { Rect, Transformer } from "react-konva";
 
 export function RectItem({ item }: { item: RectConfig }) {
-  const { color, opacity, isMaskMode, selectedId, handleUpdateItems, handleSelected } = useCanvas();
+  const { color, opacity, isMaskMode, selectedId } = useAtomValue(canvasAtom);
+  const { handleUpdateItems, handleSelected } = useCanvasActions();
   const rectReft = useRef<Konva.Rect | null>(null);
   const transformerRef = useRef<Konva.Transformer | null>(null);
   const isSelected = selectedId === item.id;

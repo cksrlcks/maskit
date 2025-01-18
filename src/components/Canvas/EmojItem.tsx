@@ -1,11 +1,14 @@
-import { useCanvas } from "@/context/CanvasContext";
+import { useCanvasActions } from "@/actions/canvas";
+import { canvasAtom } from "@/atoms/canvas";
+import { useAtomValue } from "jotai";
 import Konva from "konva";
 import { TextConfig } from "konva/lib/shapes/Text";
 import { useEffect, useRef } from "react";
 import { Text, Transformer } from "react-konva";
 
 export function EmojiItem({ item }: { item: TextConfig }) {
-  const { opacity, isMaskMode, selectedId, handleUpdateItems, handleSelected } = useCanvas();
+  const { opacity, isMaskMode, selectedId } = useAtomValue(canvasAtom);
+  const { handleUpdateItems, handleSelected } = useCanvasActions();
   const textRef = useRef<Konva.Text | null>(null);
   const transformerRef = useRef<Konva.Transformer | null>(null);
   const isSelected = selectedId === item.id;

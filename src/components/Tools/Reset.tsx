@@ -1,10 +1,10 @@
+import { useCanvasActions } from "@/actions/canvas";
 import { Button } from "@/components/ui";
 import { useAlert } from "@/context/AlertContext";
-import { useCanvas } from "@/context/CanvasContext";
 import { Eraser } from "lucide-react";
 
 export function Reset() {
-  const { handleReset } = useCanvas();
+  const { handleReset } = useCanvasActions();
   const { onAlert } = useAlert();
 
   return (

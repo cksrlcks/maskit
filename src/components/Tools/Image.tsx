@@ -1,10 +1,10 @@
+import { useCanvasActions } from "@/actions/canvas";
 import { Button } from "@/components/ui";
 import { useAlert } from "@/context/AlertContext";
-import { useCanvas } from "@/context/CanvasContext";
 import { Images } from "lucide-react";
 
 export function Image() {
-  const { handleRefresh } = useCanvas();
+  const { handleRefresh } = useCanvasActions();
   const { onAlert } = useAlert();
 
   return (

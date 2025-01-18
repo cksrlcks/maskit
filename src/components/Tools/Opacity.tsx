@@ -1,9 +1,12 @@
+import { useCanvasActions } from "@/actions/canvas";
+import { canvasAtom } from "@/atoms/canvas";
 import { Button, Popover, PopoverContent, PopoverTrigger, Slider } from "@/components/ui";
-import { useCanvas } from "@/context/CanvasContext";
+import { useAtomValue } from "jotai";
 import { Droplet } from "lucide-react";
 
 export function Opacity() {
-  const { handleOpacity } = useCanvas();
+  const { opacity } = useAtomValue(canvasAtom);
+  const { handleOpacity } = useCanvasActions();
 
   return (
     <div className="hidden sm:block">
@@ -15,7 +18,7 @@ export function Opacity() {
         </PopoverTrigger>
         <PopoverContent className="w-36">
           <Slider
-            defaultValue={[1]}
+            defaultValue={[opacity]}
             onValueChange={([opacity]) => handleOpacity(opacity)}
             max={1}
             step={0.1}

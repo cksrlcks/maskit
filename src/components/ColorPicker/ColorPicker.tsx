@@ -1,11 +1,14 @@
-import { useCanvas } from "@/context/CanvasContext";
 import { Slider } from "@/components/ui";
 import { HexColorPicker } from "react-colorful";
 import { colorPallet } from "@/constants/color";
 import clsx from "clsx";
+import { useAtomValue } from "jotai";
+import { canvasAtom } from "@/atoms/canvas";
+import { useCanvasActions } from "@/actions/canvas";
 
 export function ColorPicker() {
-  const { color, handleColor, handleOpacity } = useCanvas();
+  const { color } = useAtomValue(canvasAtom);
+  const { handleColor, handleOpacity } = useCanvasActions();
 
   return (
     <>

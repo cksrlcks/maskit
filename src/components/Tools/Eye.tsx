@@ -1,9 +1,12 @@
+import { useCanvasActions } from "@/actions/canvas";
+import { canvasAtom } from "@/atoms/canvas";
 import { Button } from "@/components/ui";
-import { useCanvas } from "@/context/CanvasContext";
+import { useAtomValue } from "jotai";
 import { EyeOff, Eye as EyeOn } from "lucide-react";
 
 export function Eye() {
-  const { isMaskMode, handleToggleHide } = useCanvas();
+  const { isMaskMode } = useAtomValue(canvasAtom);
+  const { handleToggleHide } = useCanvasActions();
 
   return (
     <Button

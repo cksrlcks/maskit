@@ -1,8 +1,23 @@
+import {
+  canvasSizeEffectAtom,
+  ocrEffectAtom,
+  outsideCanvasClickEffectAtom,
+  responsiveScaleAtom,
+  wheelZoomCanvasEffectAtom,
+} from "@/atoms/effects";
+import { imageAtom } from "@/atoms/image";
 import { Canvas, Upload } from "@/components/Canvas";
-import { useCanvas } from "@/context/CanvasContext";
+import { useAtom, useAtomValue } from "jotai";
 
 export function AppCanvas() {
-  const { imageUrl } = useCanvas();
+  const image = useAtomValue(imageAtom);
 
-  return !imageUrl ? <Upload /> : <Canvas />;
+  //effect 등록
+  useAtom(canvasSizeEffectAtom);
+  useAtom(responsiveScaleAtom);
+  useAtom(ocrEffectAtom);
+  useAtom(outsideCanvasClickEffectAtom);
+  useAtom(wheelZoomCanvasEffectAtom);
+
+  return !image.url ? <Upload /> : <Canvas />;
 }

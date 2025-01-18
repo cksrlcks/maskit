@@ -33,14 +33,17 @@ import {
   AccordionItem,
   AccordionContent,
 } from "@/components/ui";
-import { useCanvas } from "@/context/CanvasContext";
 import { useState } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 import { Feature } from "../Welcome";
 import { useNavigate } from "react-router-dom";
+import { useCanvasActions } from "@/actions/canvas";
+import { useAtomValue } from "jotai";
+import { imageAtom } from "@/atoms/image";
 
 export function RootMenu() {
-  const { image, imageUrl, handleImage } = useCanvas();
+  const image = useAtomValue(imageAtom);
+  const { handleImage } = useCanvasActions();
   const [isHelpOpen, setIsHelpOpen] = useState(false);
   const [isFeatureOpen, setIsFeatureOpen] = useState(false);
   const navigate = useNavigate();
@@ -56,7 +59,7 @@ export function RootMenu() {
   });
 
   function handlePrivacy() {
-    if (image || imageUrl) {
+    if (image.element || image.url) {
       const confirm = window.confirm("작업중이던 내용이 사라집니다.");
       if (!confirm) return;
     }

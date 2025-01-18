@@ -1,10 +1,14 @@
-import { useCanvas } from "@/context/CanvasContext";
 import { Menu } from "@/components/Menu";
 import { Zoom, ZoomReset } from "@/components/Tools";
-export function ZoomMenu() {
-  const { image, displayScale } = useCanvas();
+import { useAtomValue } from "jotai";
+import { imageAtom } from "@/atoms/image";
+import { displayScaleAtom } from "@/atoms/canvas";
 
-  if (!image) {
+export function ZoomMenu() {
+  const image = useAtomValue(imageAtom);
+  const displayScale = useAtomValue(displayScaleAtom);
+
+  if (!image.element) {
     return null;
   }
 

@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import { useCanvas } from "@/context/CanvasContext";
 import { ChevronDown, HardDrive } from "lucide-react";
 import {
   Badge,
@@ -16,9 +15,13 @@ import { Loading } from "./Loading";
 import { useHotkeys } from "react-hotkeys-hook";
 import { toast } from "@/hooks/useToast";
 import { getClipboardImage } from "@/lib/utils";
+import { useAtomValue } from "jotai";
+import { imageAtom } from "@/atoms/image";
+import { useImageActions } from "@/actions/image";
 
 export function Upload() {
-  const { handleUpload, handleUploadByBlob, image, imageUrl } = useCanvas();
+  const image = useAtomValue(imageAtom);
+  const { handleUpload, handleUploadByBlob } = useImageActions();
   const { getRootProps, getInputProps, open, isDragAccept, isDragReject } = useDropzone({
     accept: {
       "image/png": [],
@@ -56,7 +59,7 @@ export function Upload() {
 
   useHotkeys("cmd+v, ctrl+v, meta+v", async (e) => {
     e.preventDefault();
-    if (image || imageUrl) return;
+    if (image.element || image.url) return;
 
     try {
       const blob = await getClipboardImage();
