@@ -1,37 +1,11 @@
-import { useEffect } from "react";
 import { AppCanvas, AppProvider, AppDialog, AppFooter, AppLayer, AppMenu } from "@/layouts";
 import { Welcome } from "@/components/Welcome";
+import useCanvasPreSetting from "@/hooks/useCanvasPreSetting";
+import useCanvasShortcuts from "@/hooks/useCanvasShortcuts";
 
 export default function CanvasPage() {
-  // 캔버스모드일때 터치액션 방지 클래스 합입
-  useEffect(() => {
-    const htmlElement = document.querySelector("html");
-
-    if (htmlElement) {
-      htmlElement.classList.add("canvas-mode");
-      return () => {
-        htmlElement.classList.remove("canvas-mode");
-      };
-    }
-  }, []);
-
-  useEffect(() => {
-    const preventTouchZoom = (e: TouchEvent) => {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-expect-error
-      if (e.touches.length > 1 || (typeof e.scale === "number" && e.scale !== 1)) {
-        e.preventDefault();
-      }
-    };
-
-    document.addEventListener("touchstart", preventTouchZoom, { passive: false });
-    document.addEventListener("touchmove", preventTouchZoom, { passive: false });
-
-    return () => {
-      document.removeEventListener("touchstart", preventTouchZoom);
-      document.removeEventListener("touchmove", preventTouchZoom);
-    };
-  }, []);
+  useCanvasPreSetting();
+  useCanvasShortcuts();
 
   return (
     <AppProvider>

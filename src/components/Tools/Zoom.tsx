@@ -1,5 +1,5 @@
+import { useCanvasActions } from "@/actions/canvas";
 import { Button } from "@/components/ui";
-import { useCanvas } from "@/context/CanvasContext";
 import { ZoomIn, ZoomOut } from "lucide-react";
 
 export function Zoom({
@@ -11,7 +11,7 @@ export function Zoom({
   amount: number;
   disabled: boolean;
 }) {
-  const { handleZoom } = useCanvas();
+  const { handleZoom } = useCanvasActions();
   const label = type === "zoom-in" ? "확대" : "축소";
 
   return (

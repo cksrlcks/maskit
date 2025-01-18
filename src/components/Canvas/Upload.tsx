@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import { useCanvas } from "@/context/CanvasContext";
 import { ChevronDown, HardDrive } from "lucide-react";
 import {
   Badge,
@@ -16,9 +15,14 @@ import { Loading } from "./Loading";
 import { useHotkeys } from "react-hotkeys-hook";
 import { toast } from "@/hooks/useToast";
 import { getClipboardImage } from "@/lib/utils";
+import { useAtomValue } from "jotai";
+import { imageAtom } from "@/atoms/image";
+import { useImageActions } from "@/actions/image";
+import { MESSAGE, TOAST_DURATION } from "@/constants/common";
 
 export function Upload() {
-  const { handleUpload, handleUploadByBlob, image, imageUrl } = useCanvas();
+  const image = useAtomValue(imageAtom);
+  const { handleUpload, handleUploadByBlob } = useImageActions();
   const { getRootProps, getInputProps, open, isDragAccept, isDragReject } = useDropzone({
     accept: {
       "image/png": [],
@@ -56,7 +60,7 @@ export function Upload() {
 
   useHotkeys("cmd+v, ctrl+v, meta+v", async (e) => {
     e.preventDefault();
-    if (image || imageUrl) return;
+    if (image.element || image.url) return;
 
     try {
       const blob = await getClipboardImage();
@@ -67,15 +71,15 @@ export function Upload() {
     } catch (error) {
       console.error(error);
       toast({
-        duration: 2000,
-        title: "붙여넣기에 실패했습니다.",
-        description: "붙여넣을수 없는 형식입니다.",
+        duration: TOAST_DURATION,
+        title: MESSAGE.UPLOAD.PASTE_FAIL.TITLE,
+        description: MESSAGE.UPLOAD.PASTE_FAIL.DESC,
       });
     }
   });
 
-  if (googleDriveLoading) return <Loading>구글드라이브에서 데이터를 가져오고 있어요</Loading>;
-  if (dropboxLoading) return <Loading>드롭박스에서 데이터를 가져오고 있어요</Loading>;
+  if (googleDriveLoading) return <Loading>{MESSAGE.UPLOAD.GOOGLE_DRIVE.LOADING}</Loading>;
+  if (dropboxLoading) return <Loading>{MESSAGE.UPLOAD.DROPBOX.LOADING}</Loading>;
 
   return (
     <div className="fixed bottom-0 left-0 right-0 top-0 flex h-full w-full items-center justify-center">

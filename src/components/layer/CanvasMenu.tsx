@@ -1,11 +1,12 @@
-import { useCanvas } from "@/context/CanvasContext";
 import { Color, Emoji, Image, Opacity, Stamp, Reset, Eye, Delete, Ocr } from "../Tools";
 import { Menu } from "@/components/Menu";
+import { useAtomValue } from "jotai";
+import { imageAtom } from "@/atoms/image";
 
 export function CanvasMenu() {
-  const { image } = useCanvas();
+  const image = useAtomValue(imageAtom);
 
-  if (!image) {
+  if (!image.element) {
     return null;
   }
 

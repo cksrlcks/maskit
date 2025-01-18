@@ -1,11 +1,15 @@
-import { useCanvas } from "@/context/CanvasContext";
+import { useCanvasActions } from "@/actions/canvas";
+import { canvasAtom } from "@/atoms/canvas";
+import { RECT_MIN_HEIGHT, RECT_MIN_WIDTH } from "@/constants/common";
+import { RectItem as RectItemProps } from "@/types/canvas";
+import { useAtomValue } from "jotai";
 import Konva from "konva";
-import { RectConfig } from "konva/lib/shapes/Rect";
 import { useEffect, useRef } from "react";
 import { Rect, Transformer } from "react-konva";
 
-export function RectItem({ item }: { item: RectConfig }) {
-  const { color, opacity, isMaskMode, selectedId, handleUpdateItems, handleSelected } = useCanvas();
+export function RectItem({ item }: { item: RectItemProps }) {
+  const { color, opacity, isMaskMode, selectedId } = useAtomValue(canvasAtom);
+  const { handleUpdateItems, handleSelected } = useCanvasActions();
   const rectReft = useRef<Konva.Rect | null>(null);
   const transformerRef = useRef<Konva.Transformer | null>(null);
   const isSelected = selectedId === item.id;
@@ -47,12 +51,12 @@ export function RectItem({ item }: { item: RectConfig }) {
       {isSelected && isMaskMode && (
         <Transformer
           ref={transformerRef}
-          keepRatio={item.type === "emoji"}
+          keepRatio={false}
           padding={6}
           ignoreStroke={true}
           boundBoxFunc={(_, newBox) => {
-            newBox.width = Math.max(5, newBox.width);
-            newBox.height = Math.max(5, newBox.height);
+            newBox.width = Math.max(RECT_MIN_WIDTH, newBox.width);
+            newBox.height = Math.max(RECT_MIN_HEIGHT, newBox.height);
             return newBox;
           }}
         />

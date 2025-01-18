@@ -1,9 +1,9 @@
+import { useCanvasActions } from "@/actions/canvas";
 import { Button } from "@/components/ui";
-import { useCanvas } from "@/context/CanvasContext";
 import { Fullscreen } from "lucide-react";
 
 export function ZoomReset() {
-  const { handleResize } = useCanvas();
+  const { handleResize } = useCanvasActions();
 
   return (
     <Button

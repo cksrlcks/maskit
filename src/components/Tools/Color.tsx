@@ -1,9 +1,10 @@
 import { Button, Popover, PopoverContent, PopoverTrigger } from "@/components/ui";
-import { useCanvas } from "@/context/CanvasContext";
 import { ColorPicker } from "../ColorPicker";
+import { useAtomValue } from "jotai";
+import { canvasAtom } from "@/atoms/canvas";
 
 export function Color() {
-  const { color } = useCanvas();
+  const { color } = useAtomValue(canvasAtom);
 
   return (
     <Popover>

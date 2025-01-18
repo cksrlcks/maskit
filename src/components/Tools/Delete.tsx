@@ -1,10 +1,13 @@
 import { AnimatePresence, motion } from "motion/react";
-import { useCanvas } from "@/context/CanvasContext";
 import { Button } from "@/components/ui";
 import { Trash2 } from "lucide-react";
+import { useAtomValue } from "jotai";
+import { canvasAtom } from "@/atoms/canvas";
+import { useCanvasActions } from "@/actions/canvas";
 
 export function Delete() {
-  const { selectedId, handleSelectDelete } = useCanvas();
+  const { selectedId } = useAtomValue(canvasAtom);
+  const { handleSelectDelete } = useCanvasActions();
 
   return (
     <AnimatePresence mode="popLayout">
