@@ -1,10 +1,21 @@
 import { atomEffect } from "jotai-effect";
-import { imageAtom } from "./image";
-import { calculateCanvasSize } from "@/components/Canvas/helper";
-import { canvasAtom, displayScaleAtom, ocrAtom } from "./canvas";
 import { toast } from "@/hooks/useToast";
+import { imageAtom } from "./image";
+import { calculateCanvasSize } from "@/lib/canvas";
+import { canvasAtom, displayScaleAtom, ocrAtom } from "./canvas";
 import { createWorker, PSM } from "tesseract.js";
 import { v4 as uuidv4 } from "uuid";
+import {
+  MAX_DISPLAY_SCALE,
+  MESSAGE,
+  MIN_DISPLAY_SCALE,
+  RECT_MIN_HEIGHT,
+  RECT_MIN_WIDTH,
+  SCALE_AMOUNT,
+  SUPPORT_LANG,
+  TOAST_DURATION,
+} from "@/constants/common";
+import { RectItem } from "@/types/canvas";
 
 export const canvasSizeEffectAtom = atomEffect((get, set) => {
   const image = get(imageAtom);
@@ -49,10 +60,10 @@ export const ocrEffectAtom = atomEffect((get, set) => {
 
   if (image.type === "svg") {
     toast({
-      duration: 2000,
+      duration: TOAST_DURATION,
       variant: "destructive",
-      title: "문자감지가 지원되지 않는 이미지 형식입니다.",
-      description: "문자인식을 실패했습니다.",
+      title: MESSAGE.OCR.NOT_SUPPORT.TITLE,
+      description: MESSAGE.OCR.NOT_SUPPORT.DESC,
     });
     set(ocrAtom, (prev) => ({ ...prev, isExectued: true }));
     return;
@@ -64,7 +75,7 @@ export const ocrEffectAtom = atomEffect((get, set) => {
     try {
       set(ocrAtom, (prev) => ({ ...prev, isProcessing: true }));
 
-      const worker = await createWorker(["kor", "eng"]);
+      const worker = await createWorker(SUPPORT_LANG);
       await worker.setParameters({
         tessedit_pageseg_mode: PSM.AUTO,
       });
@@ -74,7 +85,7 @@ export const ocrEffectAtom = atomEffect((get, set) => {
       const scaleY = canvas.height / image.element.height;
 
       const blocks = data.paragraphs
-        .map((item) => ({
+        .map<RectItem>((item) => ({
           id: `rect-${uuidv4()}`,
           x: item.bbox.x0 * scaleX,
           y: item.bbox.y0 * scaleY,
@@ -94,8 +105,8 @@ export const ocrEffectAtom = atomEffect((get, set) => {
       toast({
         duration: 2000,
         variant: "destructive",
-        title: "자동감지 실패",
-        description: "문자인식을 실패했습니다.",
+        title: MESSAGE.OCR.ERROR.TITLE,
+        description: MESSAGE.OCR.ERROR.DESC,
       });
     } finally {
       set(ocrAtom, (prev) => ({ ...prev, isProcessing: false, isExectued: true }));
@@ -117,11 +128,16 @@ export const outsideCanvasClickEffectAtom = atomEffect((get, set) => {
       // 마우스가 캔버스 밖으로 나가면, 그리고있던 사각형이 있으면 완성해주기
       if (canvas.newRectangle) {
         const { width, height } = canvas.newRectangle;
-        if (Math.abs(width || 0) > 5 && Math.abs(height || 0) > 5) {
-          set(canvasAtom, (prev) => ({
-            ...prev,
-            items: [...prev.items, { ...canvas.newRectangle, id: `rect-${uuidv4()}` }],
-          }));
+        if (Math.abs(width || 0) > RECT_MIN_WIDTH && Math.abs(height || 0) > RECT_MIN_HEIGHT) {
+          set(canvasAtom, (prev) => {
+            if (!prev.items || !canvas.newRectangle) {
+              return prev;
+            }
+            return {
+              ...prev,
+              items: [...prev.items, { ...canvas.newRectangle, id: `rect-${uuidv4()}` }],
+            };
+          });
         }
 
         set(canvasAtom, (prev) => ({ ...prev, newRectangle: null }));
@@ -143,11 +159,14 @@ export const wheelZoomCanvasEffectAtom = atomEffect((get, set) => {
       const displayScale = get(displayScaleAtom);
 
       set(canvasAtom, (prev) => {
-        if ((e.deltaY < 0 && displayScale > 200) || (e.deltaY > 0 && displayScale < 10)) {
+        if (
+          (e.deltaY < 0 && displayScale > MAX_DISPLAY_SCALE) ||
+          (e.deltaY > 0 && displayScale < MIN_DISPLAY_SCALE)
+        ) {
           return prev;
         }
 
-        const newScale = e.deltaY > 0 ? prev.scale.x - 0.1 : prev.scale.x + 0.1;
+        const newScale = e.deltaY > 0 ? prev.scale.x - SCALE_AMOUNT : prev.scale.x + SCALE_AMOUNT;
 
         return { ...prev, scale: { x: newScale, y: newScale } };
       });

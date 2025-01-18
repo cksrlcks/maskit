@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { toast } from "./useToast";
+import { MESSAGE, TOAST_DURATION } from "@/constants/common";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 declare const Dropbox: any;
@@ -22,10 +23,10 @@ export default function useDropbox() {
           } catch (error) {
             console.error(error);
             toast({
-              duration: 2000,
+              duration: TOAST_DURATION,
               variant: "destructive",
-              title: "권한이 없어요",
-              description: "드롭박스에서 데이터를 가져오는데 실패했어요",
+              title: MESSAGE.UPLOAD.DROPBOX.FAIL.TITLE,
+              description: MESSAGE.UPLOAD.DROPBOX.FAIL.DESC,
             });
           } finally {
             setIsLoading(false);

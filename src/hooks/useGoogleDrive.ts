@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import useDrivePicker from "react-google-drive-picker";
 import { toast } from "./useToast";
+import { MESSAGE, TOAST_DURATION } from "@/constants/common";
 
 export default function useGoogleDrive() {
   const [fileId, setFileId] = useState("");
@@ -29,10 +30,10 @@ export default function useGoogleDrive() {
       } catch (error) {
         console.error(error);
         toast({
-          duration: 2000,
+          duration: TOAST_DURATION,
           variant: "destructive",
-          title: "권한이 없어요",
-          description: "구글드라이브에서 데이터를 가져오는데 실패했어요",
+          title: MESSAGE.UPLOAD.GOOGLE_DRIVE.FAIL.TITLE,
+          description: MESSAGE.UPLOAD.GOOGLE_DRIVE.FAIL.DESC,
         });
       } finally {
         setIsLoading(false);

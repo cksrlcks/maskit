@@ -1,3 +1,4 @@
+import { ALERT_LABEL_ACTION, ALERT_LABEL_CANCEL } from "@/constants/common";
 import { createContext, PropsWithChildren, useContext, useState } from "react";
 
 type AlertType = {
@@ -22,13 +23,13 @@ export function AlertProvider({ children }: PropsWithChildren) {
   const [alertState, setAlertState] = useState<AlertType>({
     title: "",
     message: "",
-    actionLabel: "확인",
-    cancelLabel: "취소",
+    actionLabel: ALERT_LABEL_ACTION,
+    cancelLabel: ALERT_LABEL_CANCEL,
   });
 
   function handleAlert(alert: AlertType) {
     setOpen(true);
-    setAlertState(alert);
+    setAlertState((prev) => ({ ...prev, ...alert }));
   }
 
   function handleAction() {

@@ -1,15 +1,8 @@
 import { atom } from "jotai";
+import { DEFAULT_IMAGE_NAME } from "@/constants/common";
+import { ImageAtom } from "@/types/canvas";
 
-export const DEFAULT_IMAGE_NAME = "maskit";
-
-interface Image {
-  url: string | null;
-  type: string | null;
-  name: string;
-  element: HTMLImageElement | null;
-}
-
-export const imageAtom = atom<Image>({
+export const imageAtom = atom<ImageAtom>({
   url: null,
   type: null,
   name: DEFAULT_IMAGE_NAME,

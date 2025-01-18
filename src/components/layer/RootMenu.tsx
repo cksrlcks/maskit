@@ -40,6 +40,7 @@ import { useNavigate } from "react-router-dom";
 import { useCanvasActions } from "@/actions/canvas";
 import { useAtomValue } from "jotai";
 import { imageAtom } from "@/atoms/image";
+import { MESSAGE } from "@/constants/common";
 
 export function RootMenu() {
   const image = useAtomValue(imageAtom);
@@ -60,7 +61,7 @@ export function RootMenu() {
 
   function handlePrivacy() {
     if (image.element || image.url) {
-      const confirm = window.confirm("작업중이던 내용이 사라집니다.");
+      const confirm = window.confirm(MESSAGE.RESET_ALERT);
       if (!confirm) return;
     }
     navigate("/privacy", { replace: true });

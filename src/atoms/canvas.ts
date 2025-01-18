@@ -1,42 +1,14 @@
 import { atom } from "jotai";
 import { imageAtom } from "./image";
-import Konva from "konva";
-import { RectConfig } from "konva/lib/shapes/Rect";
-import { ImageConfig } from "konva/lib/shapes/Image";
-import { TextConfig } from "konva/lib/shapes/Text";
+import {
+  DEFAULT_COLOR,
+  DEFAULT_OPACITY,
+  DEFAULT_SCALE_X,
+  DEFAULT_SCALE_Y,
+} from "@/constants/common";
+import { CanvasAtom, OCRAtom } from "@/types/canvas";
 
-export const DEFAULT_COLOR = "#000";
-export const DEFAULT_OPACITY = 1;
-export const DEFAULT_SCALE_X = 1;
-export const DEFAULT_SCALE_Y = 1;
-
-export type CanvasItemConfig = RectConfig | ImageConfig | TextConfig;
-interface Rect extends RectConfig {
-  fill?: string;
-}
-
-interface Canvas {
-  width: number;
-  height: number;
-  scale: {
-    x: number;
-    y: number;
-  };
-  stage: Konva.Stage | null;
-  selectedId: string | null;
-  color: string;
-  opacity: number;
-  isOCRMode: boolean;
-  isMaskMode: boolean;
-  isLoading: boolean; // 앱전체 로딩으로 빼야할듯
-
-  items: CanvasItemConfig[];
-  blocks: CanvasItemConfig[]; // 나중에 ocrblock이라고 이름바꾸기
-
-  newRectangle: Rect | null;
-}
-
-export const canvasAtom = atom<Canvas>({
+export const canvasAtom = atom<CanvasAtom>({
   width: 0,
   height: 0,
   scale: {
@@ -55,13 +27,7 @@ export const canvasAtom = atom<Canvas>({
   newRectangle: null,
 });
 
-interface OCR {
-  isProcessing: boolean;
-  isExectued: boolean;
-  data: RectConfig[];
-}
-
-export const ocrAtom = atom<OCR>({
+export const ocrAtom = atom<OCRAtom>({
   isProcessing: false,
   isExectued: false,
   data: [],

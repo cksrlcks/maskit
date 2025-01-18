@@ -1,6 +1,7 @@
-import { DEFAULT_IMAGE_NAME, imageAtom } from "@/atoms/image";
-import { getFileNameAndExt } from "@/lib/utils";
 import { useSetAtom } from "jotai";
+import { imageAtom } from "@/atoms/image";
+import { getFileNameAndExt } from "@/lib/utils";
+import { DEFAULT_IMAGE_NAME } from "@/constants/common";
 
 export const useImageActions = () => {
   const setImage = useSetAtom(imageAtom);

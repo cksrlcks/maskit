@@ -1,10 +1,10 @@
 import { Slider } from "@/components/ui";
 import { HexColorPicker } from "react-colorful";
-import { colorPallet } from "@/constants/color";
 import clsx from "clsx";
 import { useAtomValue } from "jotai";
 import { canvasAtom } from "@/atoms/canvas";
 import { useCanvasActions } from "@/actions/canvas";
+import { COLOR_PALLET } from "@/constants/common";
 
 export function ColorPicker() {
   const { color } = useAtomValue(canvasAtom);
@@ -16,7 +16,7 @@ export function ColorPicker() {
         <HexColorPicker color={color} onChange={handleColor} style={{ width: "100%" }} />
       </div>
       <div className="flex gap-1">
-        {colorPallet.map((code, index) => (
+        {COLOR_PALLET.map((code, index) => (
           <button
             key={index}
             type="button"

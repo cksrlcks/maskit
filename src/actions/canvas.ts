@@ -1,13 +1,7 @@
-import {
-  canvasAtom,
-  CanvasItemConfig,
-  DEFAULT_COLOR,
-  DEFAULT_OPACITY,
-  displayScaleAtom,
-  ocrAtom,
-} from "@/atoms/canvas";
+import { useAtom, useAtomValue } from "jotai";
+import { canvasAtom, displayScaleAtom, ocrAtom } from "@/atoms/canvas";
 import { imageAtom } from "@/atoms/image";
-import { calculateCanvasSize } from "@/components/Canvas/helper";
+import { calculateCanvasSize } from "@/lib/canvas";
 import { toast } from "@/hooks/useToast";
 import {
   canvasDownload,
@@ -15,11 +9,21 @@ import {
   copyClipboard,
   mergeCanvasWithImage,
 } from "@/lib/canvas";
-import { useAtom, useAtomValue } from "jotai";
+import { CanvasItem, handleImageType } from "@/types/canvas";
 import { KonvaEventObject } from "konva/lib/Node";
 import { v4 as uuidv4 } from "uuid";
-
-type handleImageType = "download" | "copy" | "mail" | "share" | "kakao";
+import {
+  APP_TITLE,
+  DEFAULT_COLOR,
+  DEFAULT_OPACITY,
+  MAX_DISPLAY_SCALE,
+  MESSAGE,
+  MIN_DISPLAY_SCALE,
+  PIXEL_RATIO,
+  RECT_MIN_HEIGHT,
+  RECT_MIN_WIDTH,
+  TOAST_DURATION,
+} from "@/constants/common";
 
 export const useCanvasActions = () => {
   const [canvas, setCanvas] = useAtom(canvasAtom);
@@ -31,15 +35,18 @@ export const useCanvasActions = () => {
     if (!canvas.stage || !image.element) return;
 
     const stage = canvas.stage;
-    const mergedCanvas = mergeCanvasWithImage(stage.toCanvas({ pixelRatio: 2 }), image.element);
+    const mergedCanvas = mergeCanvasWithImage(
+      stage.toCanvas({ pixelRatio: PIXEL_RATIO }),
+      image.element,
+    );
 
     if (!mergedCanvas) return;
 
     if (type === "download") {
       toast({
-        duration: 2000,
-        title: "이미지를 저장합니다.",
-        description: "곧 이미지 저장이 시작됩니다.",
+        duration: TOAST_DURATION,
+        title: MESSAGE.EXPORT.SAVE_PRE.TITLE,
+        description: MESSAGE.EXPORT.SAVE_PRE.DESC,
       });
 
       return canvasDownload(image.name, mergedCanvas);
@@ -53,24 +60,24 @@ export const useCanvasActions = () => {
       try {
         if (navigator.share) {
           await navigator.share({
-            title: "MASKIT",
+            title: APP_TITLE,
             files: [file],
           });
         } else {
           toast({
-            duration: 2000,
+            duration: TOAST_DURATION,
             variant: "destructive",
-            title: "문제가 발생했어요.",
-            description: "공유하기가 지원되지 않는 브라우저입니다.",
+            title: MESSAGE.EXPORT.SHARE_NOT_SUPPORT.TITLE,
+            description: MESSAGE.EXPORT.SHARE_NOT_SUPPORT.DESC,
           });
         }
       } catch (error) {
         console.error(error);
         toast({
-          duration: 2000,
+          duration: TOAST_DURATION,
           variant: "destructive",
-          title: "공유 중단",
-          description: "공유하기를 중단하였거나 문제가 있습니다.",
+          title: MESSAGE.EXPORT.SHARE_ERROR.TITLE,
+          description: MESSAGE.EXPORT.SHARE_ERROR.DESC,
         });
       }
 
@@ -84,33 +91,33 @@ export const useCanvasActions = () => {
     } catch (error) {
       console.log(error);
       toast({
-        duration: 2000,
+        duration: TOAST_DURATION,
         variant: "destructive",
-        title: "문제가 발생했어요.",
-        description: "예상치못한 에러가 발생하여, 이미지를 복사하지 못했습니다.",
+        title: MESSAGE.EXPORT.COPY_ERROR.TITLE,
+        description: MESSAGE.EXPORT.COPY_ERROR.DESC,
       });
     }
 
     if (type === "copy") {
       toast({
-        duration: 2000,
-        title: "복사 완료",
-        description: "성공적으로 클립보드에 이미지를 복사했습니다.",
+        duration: TOAST_DURATION,
+        title: MESSAGE.EXPORT.COPY_SUCCESS.TITLE,
+        description: MESSAGE.EXPORT.COPY_SUCCESS.DESC,
       });
     } else if (type === "mail") {
       toast({
-        duration: 2000,
-        title: "복사 완료",
-        description: "메일본문에 붙여넣기 해주세요",
+        duration: TOAST_DURATION,
+        title: MESSAGE.EXPORT.MAIL_SUCCESS.TITLE,
+        description: MESSAGE.EXPORT.MAIL_SUCCESS.DESC,
       });
 
-      const link = "mailto:?subject=MASKIT";
+      const link = `mailto:?subject=${APP_TITLE}`;
       window.location.href = link;
     } else if (type === "kakao") {
       toast({
-        duration: 2000,
-        title: "복사 완료",
-        description: "카카오톡 메세지에서 붙여넣기 해주세요.",
+        duration: TOAST_DURATION,
+        title: MESSAGE.EXPORT.KAKAO_SUCCESS.TITLE,
+        description: MESSAGE.EXPORT.KAKAO_SUCCESS.DESC,
       });
 
       window.open("kakaotalk://launch", "_blank");
@@ -146,14 +153,20 @@ export const useCanvasActions = () => {
     const position = canvas.stage.getPointerPosition();
 
     if (position) {
-      setCanvas((prev) => ({
-        ...prev,
-        newRectangle: {
-          ...prev.newRectangle,
-          width: position.x / canvas.scale.x - (prev.newRectangle?.x || 0),
-          height: position.y / canvas.scale.y - (prev.newRectangle?.y || 0),
-        },
-      }));
+      setCanvas((prev) => {
+        if (!prev.newRectangle) {
+          return prev;
+        }
+
+        return {
+          ...prev,
+          newRectangle: {
+            ...prev.newRectangle,
+            width: position.x / canvas.scale.x - (prev.newRectangle?.x || 0),
+            height: position.y / canvas.scale.y - (prev.newRectangle?.y || 0),
+          },
+        };
+      });
     }
   };
 
@@ -162,7 +175,7 @@ export const useCanvasActions = () => {
 
     const { width, height } = canvas.newRectangle;
 
-    if (Math.abs(width || 0) > 5 && Math.abs(height || 0) > 5) {
+    if (Math.abs(width || 0) > RECT_MIN_WIDTH && Math.abs(height || 0) > RECT_MIN_HEIGHT) {
       setCanvas((prev) => ({
         ...prev,
         items: [
@@ -170,6 +183,7 @@ export const useCanvasActions = () => {
           {
             ...prev.newRectangle,
             id: `rect-${uuidv4()}`,
+            type: "rect",
           },
         ],
       }));
@@ -201,10 +215,10 @@ export const useCanvasActions = () => {
   const handleOCRMode = () => {
     if (canvas.blocks.length === 0) {
       toast({
-        duration: 2000,
+        duration: TOAST_DURATION,
         variant: "destructive",
-        title: "감지된 영역 없음",
-        description: "문자인식이 잘 안되요.",
+        title: MESSAGE.OCR.EMPTY.TITLE,
+        description: MESSAGE.OCR.EMPTY.DESC,
       });
     }
     setCanvas((prev) => ({ ...prev, isOCRMode: !prev.isOCRMode }));
@@ -230,7 +244,7 @@ export const useCanvasActions = () => {
     }));
   };
 
-  const handleUpdateItems = (updated: CanvasItemConfig) => {
+  const handleUpdateItems = (updated: CanvasItem) => {
     if (updated.type === "ocr") {
       setCanvas((prev) => ({
         ...prev,
@@ -268,7 +282,7 @@ export const useCanvasActions = () => {
   const handleZoom = (amount: number) => {
     setCanvas((prev) => {
       const newScale =
-        displayScale > 200 || displayScale < 10
+        displayScale > MAX_DISPLAY_SCALE || displayScale < MIN_DISPLAY_SCALE
           ? prev.scale
           : { x: prev.scale.x + amount, y: prev.scale.y + amount };
 

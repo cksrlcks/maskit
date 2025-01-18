@@ -9,7 +9,6 @@ import {
   AlertDialogTitle,
 } from "@/components/ui";
 import { useAlert } from "@/context/AlertContext";
-import {} from "@radix-ui/react-alert-dialog";
 
 export function Alert() {
   const {
@@ -27,8 +26,8 @@ export function Alert() {
           <AlertDialogDescription>{message}</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel onClick={() => onClose()}>{cancelLabel || "취소"}</AlertDialogCancel>
-          <AlertDialogAction onClick={onAction}>{actionLabel || "확인"}</AlertDialogAction>
+          <AlertDialogCancel onClick={() => onClose()}>{cancelLabel}</AlertDialogCancel>
+          <AlertDialogAction onClick={onAction}>{actionLabel}</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

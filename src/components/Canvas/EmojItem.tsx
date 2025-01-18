@@ -1,12 +1,13 @@
 import { useCanvasActions } from "@/actions/canvas";
 import { canvasAtom } from "@/atoms/canvas";
+import { EMOJI_FONT_FAMILY, RECT_MIN_HEIGHT, RECT_MIN_WIDTH } from "@/constants/common";
+import { RectItem } from "@/types/canvas";
 import { useAtomValue } from "jotai";
 import Konva from "konva";
-import { TextConfig } from "konva/lib/shapes/Text";
 import { useEffect, useRef } from "react";
 import { Text, Transformer } from "react-konva";
 
-export function EmojiItem({ item }: { item: TextConfig }) {
+export function EmojiItem({ item }: { item: RectItem }) {
   const { opacity, isMaskMode, selectedId } = useAtomValue(canvasAtom);
   const { handleUpdateItems, handleSelected } = useCanvasActions();
   const textRef = useRef<Konva.Text | null>(null);
@@ -25,7 +26,7 @@ export function EmojiItem({ item }: { item: TextConfig }) {
       <Text
         {...item}
         ref={textRef}
-        fontFamily="Noto Color Emoji"
+        fontFamily={EMOJI_FONT_FAMILY}
         onPointerDown={() => {
           if (isMaskMode) {
             handleSelected(item.id || null);
@@ -46,12 +47,12 @@ export function EmojiItem({ item }: { item: TextConfig }) {
       {isSelected && isMaskMode && (
         <Transformer
           ref={transformerRef}
-          keepRatio
+          keepRatio={true}
           padding={6}
           ignoreStroke={true}
           boundBoxFunc={(_, newBox) => {
-            newBox.width = Math.max(5, newBox.width);
-            newBox.height = Math.max(5, newBox.height);
+            newBox.width = Math.max(RECT_MIN_WIDTH, newBox.width);
+            newBox.height = Math.max(RECT_MIN_HEIGHT, newBox.height);
             return newBox;
           }}
         />
