@@ -168,6 +168,23 @@
     "feature": {
       "title": "About Maskit",
       "desc": "About Maskit"
+    },
+    "welcome": {
+      "dont_show": "Don't show for a week",
+      "contents": [
+        {
+          "title": "Mask anything.",
+          "desc": "Use the mouse (or touch) to mask areas. You can resize and adjust the transparency of the masked parts."
+        },
+        {
+          "title": "Try using emojis.",
+          "desc": "Decorate your images or add expression by using various emojis. You can easily adjust their size and position."
+        },
+        {
+          "title": "Automatically hide text.",
+          "desc": "We provide a feature that detects text areas in an image and automatically hides them. Hide text with a single click."
+        }
+      ]
     }
   }
 }

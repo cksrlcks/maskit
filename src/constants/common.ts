@@ -1,4 +1,5 @@
 export const APP_TITLE = "MASKIT";
+export const WELCOME_DONT_SHOW_PERIOD = 7;
 
 export const MIN_BOTTOM_SPACE = 200;
 export const VIEWPORT_FACTOR = 0.8;
