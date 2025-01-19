@@ -7,7 +7,6 @@ import { createWorker, PSM } from "tesseract.js";
 import { v4 as uuidv4 } from "uuid";
 import {
   MAX_DISPLAY_SCALE,
-  MESSAGE,
   MIN_DISPLAY_SCALE,
   RECT_MIN_HEIGHT,
   RECT_MIN_WIDTH,
@@ -16,6 +15,7 @@ import {
   TOAST_DURATION,
 } from "@/constants/common";
 import { RectItem } from "@/types/canvas";
+import i18n from "@/locales/i18n"; // i18n 객체 가져오기
 
 export const canvasSizeEffectAtom = atomEffect((get, set) => {
   const image = get(imageAtom);
@@ -62,8 +62,8 @@ export const ocrEffectAtom = atomEffect((get, set) => {
     toast({
       duration: TOAST_DURATION,
       variant: "destructive",
-      title: MESSAGE.OCR.NOT_SUPPORT.TITLE,
-      description: MESSAGE.OCR.NOT_SUPPORT.DESC,
+      title: i18n.t("ocr.not_support.title"),
+      description: i18n.t("ocr.not_support.desc"),
     });
     set(ocrAtom, (prev) => ({ ...prev, isExectued: true }));
     return;
@@ -105,8 +105,8 @@ export const ocrEffectAtom = atomEffect((get, set) => {
       toast({
         duration: 2000,
         variant: "destructive",
-        title: MESSAGE.OCR.ERROR.TITLE,
-        description: MESSAGE.OCR.ERROR.DESC,
+        title: i18n.t("ocr.error.title"),
+        description: i18n.t("ocr.error.desc"),
       });
     } finally {
       set(ocrAtom, (prev) => ({ ...prev, isProcessing: false, isExectued: true }));

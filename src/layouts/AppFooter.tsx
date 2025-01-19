@@ -1,8 +1,11 @@
 import { Button } from "@/components/ui";
 import { Github } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
 export function AppFooter() {
+  const { t } = useTranslation();
+
   return (
     <>
       <div className="pointer-events-auto absolute bottom-0 left-0">
@@ -17,7 +20,7 @@ export function AppFooter() {
           to="/privacy"
           className="text-xs leading-9 tracking-tight text-muted-foreground hover:text-foreground"
         >
-          Privacy Policy
+          {t("footer.privacy")}
         </Link>
       </div>
     </>

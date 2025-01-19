@@ -14,6 +14,7 @@ export const RECT_MIN_HEIGHT = 5;
 export const MAX_DISPLAY_SCALE = 200;
 export const MIN_DISPLAY_SCALE = 10;
 export const SCALE_AMOUNT = 0.1;
+export const OPACITY_AMOUNT = 0.1;
 export const EMOJI_FONT_FAMILY = "Noto Color Emoji";
 
 export const TOAST_DURATION = 2000;

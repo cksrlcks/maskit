@@ -20,7 +20,7 @@ export async function getClipboardImage() {
     }
   } catch (error) {
     console.error(error);
-    throw Error("클립보드에서 이미지를 가져오는 중 오류가 발생했습니다:");
+    throw Error("error");
   }
 }
 

@@ -22,7 +22,7 @@ export default function PrivacyPage() {
         <Button variant="outline" size="icon" asChild>
           <Link to="/">
             <ArrowLeft className="h-[1.2rem] w-[1.2rem]" />
-            <span className="sr-only">메뉴</span>
+            <span className="sr-only">{t("menu.menu")}</span>
           </Link>
         </Button>
       </header>

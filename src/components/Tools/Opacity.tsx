@@ -1,6 +1,7 @@
 import { useCanvasActions } from "@/actions/canvas";
 import { canvasAtom } from "@/atoms/canvas";
 import { Button, Popover, PopoverContent, PopoverTrigger, Slider } from "@/components/ui";
+import { OPACITY_AMOUNT } from "@/constants/common";
 import { useAtomValue } from "jotai";
 import { Droplet } from "lucide-react";
 
@@ -21,7 +22,7 @@ export function Opacity() {
             defaultValue={[opacity]}
             onValueChange={([opacity]) => handleOpacity(opacity)}
             max={1}
-            step={0.1}
+            step={OPACITY_AMOUNT}
           />
         </PopoverContent>
       </Popover>

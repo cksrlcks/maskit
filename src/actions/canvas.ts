@@ -17,19 +17,20 @@ import {
   DEFAULT_COLOR,
   DEFAULT_OPACITY,
   MAX_DISPLAY_SCALE,
-  MESSAGE,
   MIN_DISPLAY_SCALE,
   PIXEL_RATIO,
   RECT_MIN_HEIGHT,
   RECT_MIN_WIDTH,
   TOAST_DURATION,
 } from "@/constants/common";
+import { useTranslation } from "react-i18next";
 
 export const useCanvasActions = () => {
   const [canvas, setCanvas] = useAtom(canvasAtom);
   const image = useAtomValue(imageAtom);
   const ocr = useAtomValue(ocrAtom);
   const displayScale = useAtomValue(displayScaleAtom);
+  const { t } = useTranslation();
 
   const handleImage = async (type: handleImageType) => {
     if (!canvas.stage || !image.element) return;
@@ -45,8 +46,8 @@ export const useCanvasActions = () => {
     if (type === "download") {
       toast({
         duration: TOAST_DURATION,
-        title: MESSAGE.EXPORT.SAVE_PRE.TITLE,
-        description: MESSAGE.EXPORT.SAVE_PRE.DESC,
+        title: t("export.save_pre.title"),
+        description: t("export.save_pre.desc"),
       });
 
       return canvasDownload(image.name, mergedCanvas);
@@ -67,8 +68,8 @@ export const useCanvasActions = () => {
           toast({
             duration: TOAST_DURATION,
             variant: "destructive",
-            title: MESSAGE.EXPORT.SHARE_NOT_SUPPORT.TITLE,
-            description: MESSAGE.EXPORT.SHARE_NOT_SUPPORT.DESC,
+            title: t("export.share_not_support.title"),
+            description: t("export.share_not_support.desc"),
           });
         }
       } catch (error) {
@@ -76,8 +77,8 @@ export const useCanvasActions = () => {
         toast({
           duration: TOAST_DURATION,
           variant: "destructive",
-          title: MESSAGE.EXPORT.SHARE_ERROR.TITLE,
-          description: MESSAGE.EXPORT.SHARE_ERROR.DESC,
+          title: t("export.share_error.title"),
+          description: t("export.share_error.desc"),
         });
       }
 
@@ -93,22 +94,22 @@ export const useCanvasActions = () => {
       toast({
         duration: TOAST_DURATION,
         variant: "destructive",
-        title: MESSAGE.EXPORT.COPY_ERROR.TITLE,
-        description: MESSAGE.EXPORT.COPY_ERROR.DESC,
+        title: t("export.copy_error.title"),
+        description: t("export.share_error.desc"),
       });
     }
 
     if (type === "copy") {
       toast({
         duration: TOAST_DURATION,
-        title: MESSAGE.EXPORT.COPY_SUCCESS.TITLE,
-        description: MESSAGE.EXPORT.COPY_SUCCESS.DESC,
+        title: t("export.copy_success.title"),
+        description: t("export.copy_success.desc"),
       });
     } else if (type === "mail") {
       toast({
         duration: TOAST_DURATION,
-        title: MESSAGE.EXPORT.MAIL_SUCCESS.TITLE,
-        description: MESSAGE.EXPORT.MAIL_SUCCESS.DESC,
+        title: t("export.mail_success.title"),
+        description: t("export.mail_success.desc"),
       });
 
       const link = `mailto:?subject=${APP_TITLE}`;
@@ -116,8 +117,8 @@ export const useCanvasActions = () => {
     } else if (type === "kakao") {
       toast({
         duration: TOAST_DURATION,
-        title: MESSAGE.EXPORT.KAKAO_SUCCESS.TITLE,
-        description: MESSAGE.EXPORT.KAKAO_SUCCESS.DESC,
+        title: t("export.kakao_success.title"),
+        description: t("export.kakao_success.desc"),
       });
 
       window.open("kakaotalk://launch", "_blank");
@@ -217,8 +218,8 @@ export const useCanvasActions = () => {
       toast({
         duration: TOAST_DURATION,
         variant: "destructive",
-        title: MESSAGE.OCR.EMPTY.TITLE,
-        description: MESSAGE.OCR.EMPTY.DESC,
+        title: t("ocr.empty.title"),
+        description: t("ocr.empty.desc"),
       });
     }
     setCanvas((prev) => ({ ...prev, isOCRMode: !prev.isOCRMode }));
