@@ -1,0 +1,195 @@
+{
+  "export": {
+    "save_pre": {
+      "title": "Saving image.",
+      "desc": "The image saving will start shortly."
+    },
+    "share_not_support": {
+      "title": "Something went wrong.",
+      "desc": "Sharing is not supported on this browser."
+    },
+    "share_error": {
+      "title": "Share interrupted",
+      "desc": "Sharing was stopped or an issue occurred."
+    },
+    "copy_error": {
+      "title": "Something went wrong.",
+      "desc": "An unexpected error occurred, image could not be copied."
+    },
+    "copy_success": {
+      "title": "Copy successful",
+      "desc": "Image copied to clipboard successfully."
+    },
+    "mail_success": {
+      "title": "Copy successful",
+      "desc": "Please paste in the email body."
+    },
+    "kakao_success": {
+      "title": "Copy successful",
+      "desc": "Please paste in KakaoTalk message."
+    }
+  },
+  "ocr": {
+    "not_support": {
+      "title": "Unsupported image format.",
+      "desc": "Text recognition failed."
+    },
+    "error": {
+      "title": "OCR failed",
+      "desc": "Text recognition failed."
+    },
+    "empty": {
+      "title": "No detected area",
+      "desc": "Text recognition is difficult."
+    }
+  },
+  "upload": {
+    "module": {
+      "title": "Upload an image to edit",
+      "desc": "Drop an image here or paste from clipboard.",
+      "button": {
+        "upload": "Upload image",
+        "options": "See other options",
+        "pc": "Upload from PC",
+        "google_drive": "Google Drive",
+        "dropbox": "Dropbox"
+      },
+      "inform": "Images are not uploaded to the server. Feel free to use it."
+    },
+    "paste_fail": {
+      "title": "Paste failed.",
+      "desc": "Unsupported format."
+    },
+    "google_drive": {
+      "loading": "Loading from Google Drive",
+      "fail": {
+        "title": "No permission",
+        "desc": "Failed to load data from Google Drive."
+      }
+    },
+    "dropbox": {
+      "loading": "Loading from Dropbox",
+      "fail": {
+        "title": "No permission",
+        "desc": "Failed to load data from Dropbox."
+      }
+    }
+  },
+  "reset_alert": "Unsaved work will be lost.",
+  "menu": {
+    "menu": "Menu",
+    "save_image": "Save image",
+    "copy_image": "Copy image",
+    "share": "Share",
+    "share_image": "Share image",
+    "send_email": "Send email",
+    "kakao": "KakaoTalk",
+    "feature": "Maskit feature",
+    "question": "Questions",
+    "privacy": "Privacy Policy",
+    "lang": "language",
+    "lang_ko": "Korean",
+    "lang_en": "English"
+  },
+  "theme": {
+    "title": "Theme",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System"
+  },
+  "tool": {
+    "delete_selection": "Delete selection",
+    "show_mask": "Show mask",
+    "hide_mask": "Hide mask",
+    "replace_image": "Replace image",
+    "replace_image_ment": "All work will be lost. Replace anyway?",
+    "ocr_draw": "Auto draw",
+    "reset": "Reset work",
+    "reset_ment": "All work will be erased.",
+    "zoom_in": "Zoom in",
+    "zoom_out": "Zoom out",
+    "zoom_fit": "Fit to screen"
+  },
+  "footer": {
+    "privacy": "Privacy Policy"
+  },
+  "label": {
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "close": "Close"
+  },
+  "privacy": {
+    "title": "Privacy Policy",
+    "last_updated": "Last updated: January 16, 2024",
+    "sections": {
+      "service": {
+        "heading": "Personal Data Collection and Use",
+        "content": "Maskit does not collect any personal data during the service."
+      },
+      "image": {
+        "heading": "Image Processing Policy",
+        "content": "Maskit processes images as follows:",
+        "list": [
+          "All image editing occurs locally on your browser.",
+          "Images are never sent to external servers.",
+          "Image data is processed on your device and is deleted automatically after the editing session ends."
+        ]
+      },
+      "secure": {
+        "heading": "Security",
+        "content": "Maskit values your privacy and takes the following security measures:",
+        "list": [
+          "All image processing is done client-side (in your browser).",
+          "No user data is stored on servers."
+        ]
+      },
+      "update": {
+        "heading": "Privacy Policy Updates",
+        "content": "This policy may be updated to reflect changes in law or service. Changes will be notified via the website."
+      },
+      "inquiry": {
+        "heading": "Inquiries",
+        "content": "For questions regarding the privacy policy, please contact us at the email below.",
+        "contact": "maskit.master@gmail.com"
+      }
+    }
+  },
+  "dialog": {
+    "question": {
+      "title": "Questions",
+      "desc": "Learn more about Maskit features.",
+      "list": [
+        {
+          "title": "Are images stored on a server?",
+          "desc": "Images are not sent to a server."
+        },
+        {
+          "title": "Are there any usage limitations?",
+          "desc": "Feel free to use it as you wish."
+        }
+      ]
+    },
+    "feature": {
+      "title": "About Maskit",
+      "desc": "About Maskit"
+    }
+  },
+
+  "welcome": {
+    "dont_show": "Don't show for a week",
+    "contents": [
+      {
+        "title": "Mask anything.",
+        "desc": "Use the mouse (or touch) to mask areas. You can resize and adjust the transparency of the masked parts."
+      },
+      {
+        "title": "Try using emojis.",
+        "desc": "Decorate your images or add expression by using various emojis. You can easily adjust their size and position."
+      },
+      {
+        "title": "Automatically hide text.",
+        "desc": "We provide a feature that detects text areas in an image and automatically hides them. Hide text with a single click."
+      }
+    ]
+  }
+}

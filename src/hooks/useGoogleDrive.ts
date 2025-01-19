@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import useDrivePicker from "react-google-drive-picker";
 import { toast } from "./useToast";
-import { MESSAGE, TOAST_DURATION } from "@/constants/common";
+import { TOAST_DURATION } from "@/constants/common";
+import { useTranslation } from "react-i18next";
 
 export default function useGoogleDrive() {
+  const { t } = useTranslation();
   const [fileId, setFileId] = useState("");
   const [blob, setBlob] = useState<Blob | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -32,14 +34,14 @@ export default function useGoogleDrive() {
         toast({
           duration: TOAST_DURATION,
           variant: "destructive",
-          title: MESSAGE.UPLOAD.GOOGLE_DRIVE.FAIL.TITLE,
-          description: MESSAGE.UPLOAD.GOOGLE_DRIVE.FAIL.DESC,
+          title: t("upload.google_drive.fail.title"),
+          description: t("upload.google_drive.fail.desc"),
         });
       } finally {
         setIsLoading(false);
       }
     })();
-  }, [token, fileId]);
+  }, [token, fileId, t]);
 
   function handleOpenPicker() {
     openPicker({

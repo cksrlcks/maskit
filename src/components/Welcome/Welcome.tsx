@@ -1,8 +1,12 @@
 import { useState } from "react";
-import { Button, DialogContent, Dialog } from "../ui";
+import { Button, DialogContent, Dialog, DialogHeader } from "../ui";
 import { Feature } from "./Feature";
+import { WELCOME_DONT_SHOW_PERIOD } from "@/constants/common";
+import { useTranslation } from "react-i18next";
+import { DialogDescription, DialogTitle } from "@radix-ui/react-dialog";
 
 export function Welcome() {
+  const { t } = useTranslation();
   const [showWelCome, setShowWelcome] = useState(() => {
     const date = localStorage.getItem("hideUtil");
 
@@ -17,7 +21,7 @@ export function Welcome() {
 
   function handleDontShowForWeek() {
     const date = new Date();
-    date.setDate(date.getDate() + 7);
+    date.setDate(date.getDate() + WELCOME_DONT_SHOW_PERIOD);
     localStorage.setItem("hideUtil", date.toISOString());
     setShowWelcome(false);
   }
@@ -26,6 +30,10 @@ export function Welcome() {
 
   return (
     <Dialog open={showWelCome}>
+      <DialogHeader className="sr-only">
+        <DialogTitle>{t("dialog.feature.title")}</DialogTitle>
+        <DialogDescription>{t("dialog.feature.desc")}</DialogDescription>
+      </DialogHeader>
       <DialogContent
         className="max-w-[400px] gap-0 overflow-hidden rounded-md border-none bg-transparent p-0 shadow-none"
         showCloseButton={false}
@@ -36,7 +44,7 @@ export function Welcome() {
           className="-mt-2 px-0 font-normal text-muted-foreground"
           onClick={handleDontShowForWeek}
         >
-          일주일동안 보지 않기
+          {t("welcome.dont_show")}
         </Button>
       </DialogContent>
     </Dialog>

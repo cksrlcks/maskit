@@ -2,8 +2,10 @@ import { useCanvasActions } from "@/actions/canvas";
 import { Button } from "@/components/ui";
 import { useAlert } from "@/context/AlertContext";
 import { Images } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export function Image() {
+  const { t } = useTranslation();
   const { handleRefresh } = useCanvasActions();
   const { onAlert } = useAlert();
 
@@ -11,17 +13,17 @@ export function Image() {
     <Button
       variant="outline"
       size="icon"
-      title="이미지 교체"
+      title={t("tool.replace_image")}
       onClick={() =>
         onAlert({
-          title: "이미지교체",
-          message: "작업내용이 사라집니다. 정말 교체할까요?",
+          title: t("tool.replace_image"),
+          message: t("tool.replace_image_ment"),
           onAction: handleRefresh,
         })
       }
     >
       <Images className="h-[1.2rem] w-[1.2rem]" />
-      <span className="sr-only">이미지 교체</span>
+      <span className="sr-only">{t("tool.replace_image")}</span>
     </Button>
   );
 }

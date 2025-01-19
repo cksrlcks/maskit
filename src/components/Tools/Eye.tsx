@@ -3,8 +3,10 @@ import { canvasAtom } from "@/atoms/canvas";
 import { Button } from "@/components/ui";
 import { useAtomValue } from "jotai";
 import { EyeOff, Eye as EyeOn } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export function Eye() {
+  const { t } = useTranslation();
   const { isMaskMode } = useAtomValue(canvasAtom);
   const { handleToggleHide } = useCanvasActions();
 
@@ -12,7 +14,7 @@ export function Eye() {
     <Button
       variant="outline"
       size="icon"
-      title={isMaskMode ? "보이기" : "가리기"}
+      title={isMaskMode ? t("tool.hide_mask") : t("tool.show_mask")}
       onClick={handleToggleHide}
     >
       {isMaskMode ? (
@@ -20,7 +22,7 @@ export function Eye() {
       ) : (
         <EyeOn className="h-[1.2rem] w-[1.2rem]" />
       )}
-      <span className="sr-only">{isMaskMode ? "보이기" : "가리기"}</span>
+      <span className="sr-only">{isMaskMode ? t("tool.hide_mask") : t("tool.show_mask")}</span>
     </Button>
   );
 }

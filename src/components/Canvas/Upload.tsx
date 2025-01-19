@@ -18,9 +18,11 @@ import { getClipboardImage } from "@/lib/utils";
 import { useAtomValue } from "jotai";
 import { imageAtom } from "@/atoms/image";
 import { useImageActions } from "@/actions/image";
-import { MESSAGE, TOAST_DURATION } from "@/constants/common";
+import { TOAST_DURATION } from "@/constants/common";
+import { useTranslation } from "react-i18next";
 
 export function Upload() {
+  const { t } = useTranslation();
   const image = useAtomValue(imageAtom);
   const { handleUpload, handleUploadByBlob } = useImageActions();
   const { getRootProps, getInputProps, open, isDragAccept, isDragReject } = useDropzone({
@@ -72,14 +74,14 @@ export function Upload() {
       console.error(error);
       toast({
         duration: TOAST_DURATION,
-        title: MESSAGE.UPLOAD.PASTE_FAIL.TITLE,
-        description: MESSAGE.UPLOAD.PASTE_FAIL.DESC,
+        title: t("upload.paste_fail.title"),
+        description: t("upload.paste_fail.desc"),
       });
     }
   });
 
-  if (googleDriveLoading) return <Loading>{MESSAGE.UPLOAD.GOOGLE_DRIVE.LOADING}</Loading>;
-  if (dropboxLoading) return <Loading>{MESSAGE.UPLOAD.DROPBOX.LOADING}</Loading>;
+  if (googleDriveLoading) return <Loading>{t("upload.google_drive.loading")}</Loading>;
+  if (dropboxLoading) return <Loading>{t("upload.dropbox.loading")}</Loading>;
 
   return (
     <div className="fixed bottom-0 left-0 right-0 top-0 flex h-full w-full items-center justify-center">
@@ -97,10 +99,9 @@ export function Upload() {
             )}
           >
             <div className="my-4 text-center">
-              <h2 className="mb-1 font-bold">편집할 이미지를 업로드해주세요</h2>
-              <p className="text-sm text-muted-foreground">
-                이 박스에 이미지를 드롭 하시거나, <br />
-                클립보드에서 이미지를 붙여넣기 하실수 있어요
+              <h2 className="mb-1 font-bold">{t("upload.module.title")}</h2>
+              <p className="whitespace-pre-wrap text-sm text-muted-foreground">
+                {t("upload.module.desc")}
               </p>
               <input {...getInputProps()} hidden className="hidden" />
             </div>
@@ -113,14 +114,14 @@ export function Upload() {
                   open();
                 }}
               >
-                이미지 업로드
+                {t("upload.module.button.upload")}
               </button>
               <div className="pointer-events-auto h-10 w-10 rounded-r-md border-l border-slate-600 bg-slate-900 hover:bg-slate-800">
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <button className="flex h-full w-full items-center justify-center">
                       <ChevronDown className="h-5 w-5" />
-                      <span className="sr-only">다른 옵션보기</span>
+                      <span className="sr-only">{t("upload.module.button.options")}</span>
                     </button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
@@ -131,7 +132,7 @@ export function Upload() {
                       }}
                     >
                       <HardDrive className="h-4 w-4" />
-                      PC에서 가져오기
+                      {t("upload.module.button.pc")}
                     </DropdownMenuItem>
                     <DropdownMenuItem onClick={handleDropboxPicker}>
                       <svg
@@ -141,7 +142,7 @@ export function Upload() {
                       >
                         <path d="M17.2847 10.6683L22.5 13.9909L17.248 17.3368L12 13.9934L6.75198 17.3368L1.5 13.9909L6.7152 10.6684L1.5 7.34587L6.75206 4L11.9999 7.34335L17.2481 4L22.5 7.34587L17.2847 10.6683ZM17.2112 10.6684L11.9999 7.3484L6.78869 10.6683L12 13.9883L17.2112 10.6684ZM6.78574 18.4456L12.0377 15.1L17.2898 18.4456L12.0377 21.7916L6.78574 18.4456Z"></path>
                       </svg>
-                      Dropbox
+                      {t("upload.module.button.dropbox")}
                     </DropdownMenuItem>
                     <DropdownMenuItem onClick={handleGooglePicker}>
                       <svg
@@ -151,7 +152,7 @@ export function Upload() {
                       >
                         <path d="M7.94037 4.14596L11.4217 10.1759L5.48201 20.4688L2 14.44L7.94037 4.14596ZM10.1161 14.44H22L18.518 20.4688H6.63537L10.1161 14.44ZM14.4589 13.4399L8.51799 3.14502H15.482L21.4229 13.4399H14.4589Z"></path>
                       </svg>
-                      Google drive
+                      {t("upload.module.button.google_drive")}
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
@@ -165,9 +166,7 @@ export function Upload() {
             </div>
           </div>
         </div>
-        <div className="p-2 text-xs text-muted-foreground">
-          이미지는 서버에 업로드 되지 않습니다. 안심하고 사용하세요.
-        </div>
+        <div className="p-2 text-xs text-muted-foreground">{t("upload.module.inform")}</div>
       </div>
     </div>
   );

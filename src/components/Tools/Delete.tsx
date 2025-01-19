@@ -4,8 +4,10 @@ import { Trash2 } from "lucide-react";
 import { useAtomValue } from "jotai";
 import { canvasAtom } from "@/atoms/canvas";
 import { useCanvasActions } from "@/actions/canvas";
+import { useTranslation } from "react-i18next";
 
 export function Delete() {
+  const { t } = useTranslation();
   const { selectedId } = useAtomValue(canvasAtom);
   const { handleSelectDelete } = useCanvasActions();
 
@@ -20,12 +22,12 @@ export function Delete() {
           <Button
             variant="outline"
             size="icon"
-            title="선택삭제"
+            title={t("tool.delete_selection")}
             data-prevent-focusout
             onClick={handleSelectDelete}
           >
             <Trash2 className="h-[1.2rem] w-[1.2rem]" />
-            <span className="sr-only">선택삭제</span>
+            <span className="sr-only">{t("tool.delete_selection")}</span>
           </Button>
         </motion.div>
       )}

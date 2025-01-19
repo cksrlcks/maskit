@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { toast } from "./useToast";
-import { MESSAGE, TOAST_DURATION } from "@/constants/common";
+import { TOAST_DURATION } from "@/constants/common";
+import { useTranslation } from "react-i18next";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 declare const Dropbox: any;
 
 export default function useDropbox() {
+  const { t } = useTranslation();
   const [blob, setBlob] = useState<Blob | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -25,8 +27,8 @@ export default function useDropbox() {
             toast({
               duration: TOAST_DURATION,
               variant: "destructive",
-              title: MESSAGE.UPLOAD.DROPBOX.FAIL.TITLE,
-              description: MESSAGE.UPLOAD.DROPBOX.FAIL.DESC,
+              title: t("upload.dropbox.fail.title"),
+              description: t("upload.dropbox.fail.desc"),
             });
           } finally {
             setIsLoading(false);
