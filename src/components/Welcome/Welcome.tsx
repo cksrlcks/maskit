@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { Button, DialogContent, Dialog } from "../ui";
+import { Button, DialogContent, Dialog, DialogHeader } from "../ui";
 import { Feature } from "./Feature";
 import { WELCOME_DONT_SHOW_PERIOD } from "@/constants/common";
 import { useTranslation } from "react-i18next";
+import { DialogDescription, DialogTitle } from "@radix-ui/react-dialog";
 
 export function Welcome() {
   const { t } = useTranslation();
@@ -29,6 +30,10 @@ export function Welcome() {
 
   return (
     <Dialog open={showWelCome}>
+      <DialogHeader className="sr-only">
+        <DialogTitle>{t("dialog.feature.title")}</DialogTitle>
+        <DialogDescription>{t("dialog.feature.desc")}</DialogDescription>
+      </DialogHeader>
       <DialogContent
         className="max-w-[400px] gap-0 overflow-hidden rounded-md border-none bg-transparent p-0 shadow-none"
         showCloseButton={false}

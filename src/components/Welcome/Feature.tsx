@@ -52,7 +52,7 @@ export function Feature({ onClose }: { onClose: () => void }) {
           </div>
           <div className="flex flex-row-reverse items-center justify-between">
             <Button variant="outline" onClick={onClose}>
-              닫기
+              {t("label.close")}
             </Button>
             <div className="flex gap-1">
               <Button
