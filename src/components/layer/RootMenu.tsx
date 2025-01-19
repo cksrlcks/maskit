@@ -9,6 +9,8 @@ import {
   Smartphone,
   Sparkles,
   ShieldCheck,
+  Earth,
+  Check,
 } from "lucide-react";
 import {
   Button,
@@ -38,10 +40,11 @@ import { useHotkeys } from "react-hotkeys-hook";
 import { Feature } from "../Welcome";
 import { useNavigate } from "react-router-dom";
 import { useCanvasActions } from "@/actions/canvas";
-import { useAtomValue } from "jotai";
+import { useAtom, useAtomValue } from "jotai";
 import { imageAtom } from "@/atoms/image";
 import { MESSAGE } from "@/constants/common";
 import { useTranslation } from "react-i18next";
+import { langAtom } from "@/atoms/lang";
 
 type FeatureItem = {
   title: string;
@@ -51,6 +54,7 @@ type FeatureItem = {
 export function RootMenu() {
   const { t } = useTranslation();
   const image = useAtomValue(imageAtom);
+  const [lang, setLang] = useAtom(langAtom);
   const { handleImage } = useCanvasActions();
   const [isHelpOpen, setIsHelpOpen] = useState(false);
   const [isFeatureOpen, setIsFeatureOpen] = useState(false);
@@ -116,6 +120,24 @@ export function RootMenu() {
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => handleImage("kakao")} disabled={!image}>
                   <MessageCircle /> {t("menu.kakao")}
+                </DropdownMenuItem>
+              </DropdownMenuSubContent>
+            </DropdownMenuPortal>
+          </DropdownMenuSub>
+          <DropdownMenuSub>
+            <DropdownMenuSubTrigger>
+              <Earth />
+              {t("menu.lang")}
+            </DropdownMenuSubTrigger>
+            <DropdownMenuPortal>
+              <DropdownMenuSubContent>
+                <DropdownMenuItem onClick={() => setLang("ko")}>
+                  {t("menu.lang_ko")}
+                  {lang === "ko" && <Check className="ml-auto" />}
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setLang("en")}>
+                  {t("menu.lang_en")}
+                  {lang === "en" && <Check className="ml-auto" />}
                 </DropdownMenuItem>
               </DropdownMenuSubContent>
             </DropdownMenuPortal>
