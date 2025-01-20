@@ -45,6 +45,7 @@ import { imageAtom } from "@/atoms/image";
 import { MESSAGE } from "@/constants/common";
 import { useTranslation } from "react-i18next";
 import { langAtom } from "@/atoms/lang";
+import { globalStore } from "@/store/globalStore";
 
 type FeatureItem = {
   title: string;
@@ -54,7 +55,7 @@ type FeatureItem = {
 export function RootMenu() {
   const { t } = useTranslation();
   const image = useAtomValue(imageAtom);
-  const [lang, setLang] = useAtom(langAtom);
+  const [lang, setLang] = useAtom(langAtom, { store: globalStore });
   const { handleImage } = useCanvasActions();
   const [isHelpOpen, setIsHelpOpen] = useState(false);
   const [isFeatureOpen, setIsFeatureOpen] = useState(false);
