@@ -4,6 +4,7 @@ import {
   outsideCanvasClickEffectAtom,
   responsiveScaleAtom,
   wheelZoomCanvasEffectAtom,
+  clearOnUnmount,
 } from "@/atoms/effects";
 import { imageAtom } from "@/atoms/image";
 import { Canvas, Upload } from "@/components/Canvas";
@@ -18,6 +19,7 @@ export function AppCanvas() {
   useAtom(ocrEffectAtom);
   useAtom(outsideCanvasClickEffectAtom);
   useAtom(wheelZoomCanvasEffectAtom);
+  useAtom(clearOnUnmount);
 
   return !image.url ? <Upload /> : <Canvas />;
 }

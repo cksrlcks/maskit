@@ -8,7 +8,7 @@ import {
 } from "@/constants/common";
 import { CanvasAtom, OCRAtom } from "@/types/canvas";
 
-export const canvasAtom = atom<CanvasAtom>({
+export const defaultCavnasAtom = {
   width: 0,
   height: 0,
   scale: {
@@ -25,13 +25,16 @@ export const canvasAtom = atom<CanvasAtom>({
   items: [],
   blocks: [],
   newRectangle: null,
-});
+};
 
-export const ocrAtom = atom<OCRAtom>({
+export const defaultOCRAtom = {
   isProcessing: false,
   isExectued: false,
   data: [],
-});
+};
+
+export const canvasAtom = atom<CanvasAtom>(defaultCavnasAtom);
+export const ocrAtom = atom<OCRAtom>(defaultOCRAtom);
 
 export const displayScaleAtom = atom((get) => {
   const canvas = get(canvasAtom);
