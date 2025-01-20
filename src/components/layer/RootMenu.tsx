@@ -42,9 +42,9 @@ import { useNavigate } from "react-router-dom";
 import { useCanvasActions } from "@/actions/canvas";
 import { useAtom, useAtomValue } from "jotai";
 import { imageAtom } from "@/atoms/image";
-import { MESSAGE } from "@/constants/common";
 import { useTranslation } from "react-i18next";
 import { langAtom } from "@/atoms/lang";
+import { globalStore } from "@/store/globalStore";
 
 type FeatureItem = {
   title: string;
@@ -54,7 +54,7 @@ type FeatureItem = {
 export function RootMenu() {
   const { t } = useTranslation();
   const image = useAtomValue(imageAtom);
-  const [lang, setLang] = useAtom(langAtom);
+  const [lang, setLang] = useAtom(langAtom, { store: globalStore });
   const { handleImage } = useCanvasActions();
   const [isHelpOpen, setIsHelpOpen] = useState(false);
   const [isFeatureOpen, setIsFeatureOpen] = useState(false);
@@ -72,7 +72,7 @@ export function RootMenu() {
 
   function handlePrivacy() {
     if (image.element || image.url) {
-      const confirm = window.confirm(MESSAGE.RESET_ALERT);
+      const confirm = window.confirm(t("reset_alert"));
       if (!confirm) return;
     }
     navigate("/privacy", { replace: true });

@@ -2,20 +2,23 @@ import { AppCanvas, AppProvider, AppDialog, AppFooter, AppLayer, AppMenu } from 
 import { Welcome } from "@/components/Welcome";
 import useCanvasPreSetting from "@/hooks/useCanvasPreSetting";
 import useCanvasShortcuts from "@/hooks/useCanvasShortcuts";
+import { Provider } from "jotai";
 
 export default function CanvasPage() {
   useCanvasPreSetting();
   useCanvasShortcuts();
 
   return (
-    <AppProvider>
-      <Welcome />
-      <AppLayer>
-        <AppMenu />
-        <AppFooter />
-      </AppLayer>
-      <AppCanvas />
-      <AppDialog />
-    </AppProvider>
+    <Provider>
+      <AppProvider>
+        <Welcome />
+        <AppLayer>
+          <AppMenu />
+          <AppFooter />
+        </AppLayer>
+        <AppCanvas />
+        <AppDialog />
+      </AppProvider>
+    </Provider>
   );
 }
