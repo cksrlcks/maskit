@@ -1,8 +1,8 @@
 import { atomEffect } from "jotai-effect";
 import { toast } from "@/hooks/useToast";
-import { imageAtom } from "./image";
+import { defaultImageAtom, imageAtom } from "./image";
 import { calculateCanvasSize } from "@/lib/canvas";
-import { canvasAtom, displayScaleAtom, ocrAtom } from "./canvas";
+import { canvasAtom, defaultCavnasAtom, defaultOCRAtom, displayScaleAtom, ocrAtom } from "./canvas";
 import { createWorker, PSM } from "tesseract.js";
 import { v4 as uuidv4 } from "uuid";
 import {
@@ -175,4 +175,18 @@ export const wheelZoomCanvasEffectAtom = atomEffect((get, set) => {
 
   window.addEventListener("wheel", wheelZoom, { passive: false });
   return () => window.removeEventListener("wheel", wheelZoom);
+});
+
+export const clearOnUnmount = atomEffect((get, set) => {
+  const image = get(imageAtom);
+
+  return () => {
+    if (image.element && image.url) {
+      URL.revokeObjectURL(image.url);
+
+      set(imageAtom, defaultImageAtom);
+      set(canvasAtom, defaultCavnasAtom);
+      set(ocrAtom, defaultOCRAtom);
+    }
+  };
 });
