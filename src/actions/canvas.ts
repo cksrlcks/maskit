@@ -16,6 +16,7 @@ import {
   APP_TITLE,
   DEFAULT_COLOR,
   DEFAULT_OPACITY,
+  EMOJI_INITIAL_MIN_SIZE,
   MAX_DISPLAY_SCALE,
   MIN_DISPLAY_SCALE,
   PIXEL_RATIO,
@@ -262,7 +263,7 @@ export const useCanvasActions = () => {
   };
 
   const handleEmoji = (code: string) => {
-    const fontSize = canvas.width * 0.25;
+    const fontSize = Math.min(canvas.width * 0.25, EMOJI_INITIAL_MIN_SIZE);
 
     setCanvas((prev) => ({
       ...prev,
