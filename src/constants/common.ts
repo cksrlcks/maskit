@@ -25,3 +25,31 @@ export const ALERT_LABEL_ACTION = "확인";
 export const ALERT_LABEL_CANCEL = "취소";
 
 export const COLOR_PALLET = ["#ffffff", "#000000", "#ef4444", "#fbbf24", "#4ade80", "#60a5fa"];
+
+export const SHORTCUTS = {
+  COPY: {
+    MAC: "⌘+C",
+    WIN: "Ctrl+C",
+    MOBILE: "",
+  },
+  SAVE: {
+    MAC: "⌘+S",
+    WIN: "Ctrl+S",
+    MOBILE: "",
+  },
+  FEAT: {
+    MAC: "!",
+    WIN: "!",
+    MOBILE: "",
+  },
+  QNA: {
+    MAC: "?",
+    WIN: "?",
+    MOBILE: "",
+  },
+  GUIDE: {
+    MAC: "/",
+    WIN: "/",
+    MOBILE: "",
+  },
+};
