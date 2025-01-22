@@ -45,6 +45,8 @@ import { imageAtom } from "@/atoms/image";
 import { useTranslation } from "react-i18next";
 import { langAtom } from "@/atoms/lang";
 import { globalStore } from "@/store/globalStore";
+import { osAtom } from "@/atoms/os";
+import { SHORTCUTS } from "@/constants/common";
 
 type FeatureItem = {
   title: string;
@@ -55,6 +57,7 @@ export function RootMenu() {
   const { t } = useTranslation();
   const image = useAtomValue(imageAtom);
   const [lang, setLang] = useAtom(langAtom, { store: globalStore });
+  const os = useAtomValue(osAtom);
   const { handleImage } = useCanvasActions();
   const [isHelpOpen, setIsHelpOpen] = useState(false);
   const [isFeatureOpen, setIsFeatureOpen] = useState(false);
@@ -96,12 +99,12 @@ export function RootMenu() {
           <DropdownMenuItem onClick={() => handleImage("download")} disabled={!image}>
             <Download />
             {t("menu.save_image")}
-            <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
+            <DropdownMenuShortcut>{SHORTCUTS.SAVE[os]}</DropdownMenuShortcut>
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => handleImage("copy")} disabled={!image}>
             <Copy />
             {t("menu.copy_image")}
-            <DropdownMenuShortcut>⌘C</DropdownMenuShortcut>
+            <DropdownMenuShortcut>{SHORTCUTS.COPY[os]}</DropdownMenuShortcut>
           </DropdownMenuItem>
           <DropdownMenuSub>
             <DropdownMenuSubTrigger>
@@ -146,12 +149,12 @@ export function RootMenu() {
           <DropdownMenuItem onClick={() => setIsFeatureOpen(true)}>
             <Sparkles />
             {t("menu.feature")}
-            <DropdownMenuShortcut>!</DropdownMenuShortcut>
+            <DropdownMenuShortcut>{SHORTCUTS.FEAT[os]}</DropdownMenuShortcut>
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => setIsHelpOpen(true)}>
             <Info />
             {t("menu.question")}
-            <DropdownMenuShortcut>?</DropdownMenuShortcut>
+            <DropdownMenuShortcut>{SHORTCUTS.QNA[os]}</DropdownMenuShortcut>
           </DropdownMenuItem>
           <DropdownMenuItem onClick={handlePrivacy}>
             <ShieldCheck />
