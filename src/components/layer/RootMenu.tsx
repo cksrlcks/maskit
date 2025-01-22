@@ -11,6 +11,7 @@ import {
   ShieldCheck,
   Earth,
   Check,
+  Keyboard,
 } from "lucide-react";
 import {
   Button,
@@ -45,6 +46,8 @@ import { imageAtom } from "@/atoms/image";
 import { useTranslation } from "react-i18next";
 import { langAtom } from "@/atoms/lang";
 import { globalStore } from "@/store/globalStore";
+import { osAtom } from "@/atoms/os";
+import { SHORTCUTS } from "@/constants/common";
 
 type FeatureItem = {
   title: string;
@@ -55,9 +58,11 @@ export function RootMenu() {
   const { t } = useTranslation();
   const image = useAtomValue(imageAtom);
   const [lang, setLang] = useAtom(langAtom, { store: globalStore });
+  const os = useAtomValue(osAtom);
   const { handleImage } = useCanvasActions();
   const [isHelpOpen, setIsHelpOpen] = useState(false);
   const [isFeatureOpen, setIsFeatureOpen] = useState(false);
+  const [isGuideOpen, setIsGuideOpen] = useState(false);
   const navigate = useNavigate();
 
   useHotkeys("shift+?, ?, shfit+/", (e) => {
@@ -96,12 +101,12 @@ export function RootMenu() {
           <DropdownMenuItem onClick={() => handleImage("download")} disabled={!image}>
             <Download />
             {t("menu.save_image")}
-            <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
+            <DropdownMenuShortcut>{SHORTCUTS.SAVE[os]}</DropdownMenuShortcut>
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => handleImage("copy")} disabled={!image}>
             <Copy />
             {t("menu.copy_image")}
-            <DropdownMenuShortcut>⌘C</DropdownMenuShortcut>
+            <DropdownMenuShortcut>{SHORTCUTS.COPY[os]}</DropdownMenuShortcut>
           </DropdownMenuItem>
           <DropdownMenuSub>
             <DropdownMenuSubTrigger>
@@ -146,13 +151,20 @@ export function RootMenu() {
           <DropdownMenuItem onClick={() => setIsFeatureOpen(true)}>
             <Sparkles />
             {t("menu.feature")}
-            <DropdownMenuShortcut>!</DropdownMenuShortcut>
+            <DropdownMenuShortcut>{SHORTCUTS.FEAT[os]}</DropdownMenuShortcut>
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => setIsHelpOpen(true)}>
             <Info />
             {t("menu.question")}
-            <DropdownMenuShortcut>?</DropdownMenuShortcut>
+            <DropdownMenuShortcut>{SHORTCUTS.QNA[os]}</DropdownMenuShortcut>
           </DropdownMenuItem>
+          {os !== "MOBILE" && (
+            <DropdownMenuItem onClick={() => setIsGuideOpen(true)}>
+              <Keyboard />
+              {t("menu.guide")}
+              <DropdownMenuShortcut>{SHORTCUTS.GUIDE[os]}</DropdownMenuShortcut>
+            </DropdownMenuItem>
+          )}
           <DropdownMenuItem onClick={handlePrivacy}>
             <ShieldCheck />
             {t("menu.privacy")}
@@ -187,6 +199,45 @@ export function RootMenu() {
             <DialogDescription>{t("dialog.feature.desc")}</DialogDescription>
           </DialogHeader>
           <Feature onClose={() => setIsFeatureOpen(false)} />
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isGuideOpen} onOpenChange={setIsGuideOpen}>
+        <DialogContent className="focus-visible:outline-none sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>{t("dialog.guide.title")}</DialogTitle>
+            <DialogDescription>{t("dialog.guide.desc")}</DialogDescription>
+          </DialogHeader>
+          <ul className="my-2 grid gap-4">
+            <li className="flex items-center justify-between text-xs">
+              <div className="text-muted-foreground">{t("dialog.guide.list.paste")}</div>
+              <div className="text-muted-foreground">{SHORTCUTS.PASTE[os]}</div>
+            </li>
+            <li className="flex items-center justify-between text-xs">
+              <div className="text-muted-foreground">{t("dialog.guide.list.copy")}</div>
+              <div className="text-muted-foreground">{SHORTCUTS.COPY[os]}</div>
+            </li>
+            <li className="flex items-center justify-between text-xs">
+              <div className="text-muted-foreground">{t("dialog.guide.list.save")}</div>
+              <div className="text-muted-foreground">{SHORTCUTS.SAVE[os]}</div>
+            </li>
+            <li className="flex items-center justify-between text-xs">
+              <div className="text-muted-foreground">{t("dialog.guide.list.delete")}</div>
+              <div className="text-muted-foreground">{SHORTCUTS.DELETE[os]}</div>
+            </li>
+            <li className="flex items-center justify-between text-xs">
+              <div className="text-muted-foreground">{t("dialog.guide.list.feat")}</div>
+              <div className="text-muted-foreground">{SHORTCUTS.FEAT[os]}</div>
+            </li>
+            <li className="flex items-center justify-between text-xs">
+              <div className="text-muted-foreground">{t("dialog.guide.list.guide")}</div>
+              <div className="text-muted-foreground">{SHORTCUTS.GUIDE[os]}</div>
+            </li>
+            <li className="flex items-center justify-between text-xs">
+              <div className="text-muted-foreground">{t("dialog.guide.list.qna")}</div>
+              <div className="text-muted-foreground">{SHORTCUTS.QNA[os]}</div>
+            </li>
+          </ul>
         </DialogContent>
       </Dialog>
     </>
