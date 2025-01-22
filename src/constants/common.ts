@@ -27,6 +27,11 @@ export const ALERT_LABEL_CANCEL = "취소";
 export const COLOR_PALLET = ["#ffffff", "#000000", "#ef4444", "#fbbf24", "#4ade80", "#60a5fa"];
 
 export const SHORTCUTS = {
+  PASTE: {
+    MAC: "⌘+V",
+    WIN: "Ctrl+V",
+    MOBILE: "",
+  },
   COPY: {
     MAC: "⌘+C",
     WIN: "Ctrl+C",
@@ -35,6 +40,11 @@ export const SHORTCUTS = {
   SAVE: {
     MAC: "⌘+S",
     WIN: "Ctrl+S",
+    MOBILE: "",
+  },
+  DELETE: {
+    MAC: "Backspace",
+    WIN: "Backspace",
     MOBILE: "",
   },
   FEAT: {

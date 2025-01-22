@@ -87,6 +87,7 @@
     "feature": "마스킷 기능",
     "question": "궁금해요",
     "privacy": "개인정보처리방침",
+    "guide": "단축키",
     "lang": "언어",
     "lang_ko": "한국어",
     "lang_en": "English"
@@ -170,8 +171,21 @@
       ]
     },
     "feature": {
-      "title": "MAKIT 소개",
-      "desc": "MAKIT 소개"
+      "title": "MASKIT 소개",
+      "desc": "MASKIT 소개"
+    },
+    "guide": {
+      "title": "단축키 안내",
+      "desc": "단축키로 편하게 사용해보세요",
+      "list": {
+        "paste": "이미지 붙여넣기",
+        "copy": "결과물 복사하기",
+        "save": "결과물 저장하기",
+        "delete": "선택 삭제",
+        "feat": "도움말",
+        "guide": "단축키 안내",
+        "qna": "궁금해요"
+      }
     }
   },
   "welcome": {

@@ -87,6 +87,7 @@
     "feature": "Maskit feature",
     "question": "Questions",
     "privacy": "Privacy Policy",
+    "guide": "Shortcuts",
     "lang": "language",
     "lang_ko": "Korean",
     "lang_en": "English"
@@ -172,6 +173,19 @@
     "feature": {
       "title": "About Maskit",
       "desc": "About Maskit"
+    },
+    "guide": {
+      "title": "Shortcut Guide",
+      "desc": "Use shortcuts for a more convenient experience.",
+      "list": {
+        "paste": "Paste image",
+        "copy": "Copy result",
+        "save": "Save result",
+        "delete": "Delete selection",
+        "feat": "Help",
+        "guide": "Shortcut guide",
+        "qna": "Questions"
+      }
     }
   },
 
