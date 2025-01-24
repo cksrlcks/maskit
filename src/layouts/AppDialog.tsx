@@ -1,4 +1,5 @@
 import { Alert } from "@/components/Alert";
+import { FeatureDialog, GuideDialog, HelpDialog } from "@/components/Dialog";
 import { Toaster } from "@/components/ui";
 
 export function AppDialog() {
@@ -6,6 +7,9 @@ export function AppDialog() {
     <>
       <Toaster />
       <Alert />
+      <HelpDialog />
+      <GuideDialog />
+      <FeatureDialog />
     </>
   );
 }
