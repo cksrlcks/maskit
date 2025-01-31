@@ -1,4 +1,4 @@
-import { Color, Emoji, Image, Opacity, Stamp, Reset, Eye, Delete, Ocr } from "../Tools";
+import { Color, Emoji, Image, Opacity, Reset, Eye, Delete, Ocr } from "../Tools";
 import { Menu } from "@/components/Menu";
 import { useAtomValue } from "jotai";
 import { imageAtom } from "@/atoms/image";
@@ -15,7 +15,7 @@ export function CanvasMenu() {
       <Menu.Group>
         <Color />
         <Opacity />
-        <Stamp />
+        {/* <Stamp /> */}
         <Emoji />
       </Menu.Group>
       <Menu.Seperator />
