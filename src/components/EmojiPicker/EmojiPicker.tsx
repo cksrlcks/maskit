@@ -1,6 +1,8 @@
 import { emojis as emojisGroup } from "@/constants/emoji";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui";
 import { MouseEvent } from "react";
+import { cn } from "@/lib/utils";
+import { isSafari } from "react-device-detect";
 
 interface EmojiPicker {
   onClick: (code: string) => void;
@@ -16,7 +18,7 @@ export default function EmojiPicker({ onClick }: EmojiPicker) {
   }
 
   return (
-    <Tabs defaultValue={emojisGroup[0].id} className="w-full font-emoji">
+    <Tabs defaultValue={emojisGroup[0].id} className={cn("w-full", !isSafari && "font-emoji")}>
       <TabsList className="w-full">
         {emojisGroup.map(({ id, emojis }) => (
           <TabsTrigger key={id} value={id}>

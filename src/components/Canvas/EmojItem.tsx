@@ -5,6 +5,7 @@ import { RectItem } from "@/types/canvas";
 import { useAtomValue } from "jotai";
 import Konva from "konva";
 import { useEffect, useRef } from "react";
+import { isSafari } from "react-device-detect";
 import { Text, Transformer } from "react-konva";
 
 export function EmojiItem({ item }: { item: RectItem }) {
@@ -26,7 +27,7 @@ export function EmojiItem({ item }: { item: RectItem }) {
       <Text
         {...item}
         ref={textRef}
-        fontFamily={EMOJI_FONT_FAMILY}
+        {...(!isSafari && { fontFamily: EMOJI_FONT_FAMILY })}
         onPointerDown={() => {
           if (isMaskMode) {
             handleSelected(item.id || null);
