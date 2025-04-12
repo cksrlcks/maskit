@@ -15,22 +15,27 @@
 
 
 #### 클라우드 이미지 연동
-![Group 25](https://github.com/user-attachments/assets/45ca9928-95de-4195-aa40-0738925fbe70)
-
 PC나 핸드폰의 이미지는 물론 구글 드라이브, 드롭박스 등 클라우드 서비스에 저장된 개인 이미지도 불러와 바로 마스킹 작업을 할 수 있습니다.  
   
-#### 자유롭게 조절 가능한 마스킹 도구
-![Group 26](https://github.com/user-attachments/assets/f17efac7-aa45-438d-944d-6fad4c7bf0a9)
+![Group 28](https://github.com/user-attachments/assets/9f6ae157-6a59-44f5-bff7-89680cbfebc6)
+<br><br>
 
+#### 자유롭게 조절 가능한 마스킹 도구
 마우스로 드래그해 직접 그린 마스킹 영역은 투명도 조절, 회전, 크기 변경이 가능하며, 텍스트나 이모지를 활용해 감각적으로 가릴 수도 있습니다.
+
+![Group 29](https://github.com/user-attachments/assets/f33be29e-e7a2-4dfb-8de2-842875cc17fc)
+<br><br>
 
 #### 마스킹 표시 토글 기능
 마스킹은 편집중인 이미지에 영구적으로 적용되지 않으며, 가림 여부를 자유롭게 켜고 끌 수 있어 편리해요.
 
-#### 다양한 공유 및 저장 방식
-![Group 23](https://github.com/user-attachments/assets/bedeab28-e7a8-4bc1-8d23-7d3911998c33)
+![Group 30](https://github.com/user-attachments/assets/3e9cf839-6c00-4f18-822f-6a3e0fb0a539)
+<br><br>
 
+#### 다양한 공유 및 저장 방식
 복사/붙여넣기를 통한 간편한 공유는 물론, 이메일, 카카오톡 공유, 로컬 저장 등 다양한 방식으로 결과 이미지를 저장하고 전달할 수 있습니다.
+
+![Group 27](https://github.com/user-attachments/assets/06565661-ba44-4e5e-9850-3f1156dbaab9)
 
 ---
 ## Stacks
