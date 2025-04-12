@@ -32,7 +32,7 @@ PC나 핸드폰의 이미지는 물론 구글 드라이브, 드롭박스 등 클
 ![Group 30](https://github.com/user-attachments/assets/f475c3ae-ae43-4d33-b1ac-0880ffa2683f)
 <br><br>
 
-### 문자 영역 자동 감지
+#### 문자 영역 자동 감지
 OCR을 활용해 이미지 내 텍스트 영역을 감지하고, 한 번에 마스킹 처리할 수 있습니다.
 
 ![ocr](https://github.com/user-attachments/assets/60cfd6b2-15a8-4dd1-89ff-1ce600948d92)
