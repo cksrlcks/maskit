@@ -27,7 +27,7 @@ export function ShareMenu() {
       <DropdownMenuContent align="end">
         <DropdownMenuItem onClick={() => handleImage("copy")} disabled={!image.element}>
           <Copy />
-          {t("menu.share_image")}
+          {t("menu.copy_image")}
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => handleImage("download")} disabled={!image.element}>
           <Download />
