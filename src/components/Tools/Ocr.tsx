@@ -2,7 +2,7 @@ import { Button } from "@/components/ui";
 import { Loader2, WandSparkles } from "lucide-react";
 import { useAtomValue } from "jotai";
 import { ocrAtom } from "@/atoms/canvas";
-import { useCanvasActions } from "@/actions/canvas";
+import { useCanvasActions } from "@/hooks/useCanvasActions";
 import clsx from "clsx";
 import { useTranslation } from "react-i18next";
 

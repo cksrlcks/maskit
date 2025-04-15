@@ -3,7 +3,7 @@ import { HexColorPicker } from "react-colorful";
 import clsx from "clsx";
 import { useAtomValue } from "jotai";
 import { canvasAtom } from "@/atoms/canvas";
-import { useCanvasActions } from "@/actions/canvas";
+import { useCanvasActions } from "@/hooks/useCanvasActions";
 import { COLOR_PALLET } from "@/constants/common";
 
 export function ColorPicker() {

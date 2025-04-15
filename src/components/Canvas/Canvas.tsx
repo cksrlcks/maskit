@@ -3,7 +3,7 @@ import { RectItem } from "./RectItem";
 import { EmojiItem } from "./EmojItem";
 import { LoadingSpinner } from "./LoadingSpinner";
 import { isMobile } from "react-device-detect";
-import { useCanvasActions } from "@/actions/canvas";
+import { useCanvasActions } from "@/hooks/useCanvasActions";
 import { useAtom, useAtomValue } from "jotai";
 import { imageAtom } from "@/atoms/image";
 import { canvasAtom } from "@/atoms/canvas";

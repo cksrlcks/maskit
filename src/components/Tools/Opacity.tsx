@@ -1,4 +1,4 @@
-import { useCanvasActions } from "@/actions/canvas";
+import { useCanvasActions } from "@/hooks/useCanvasActions";
 import { canvasAtom } from "@/atoms/canvas";
 import { Button, Popover, PopoverContent, PopoverTrigger, Slider } from "@/components/ui";
 import { OPACITY_AMOUNT } from "@/constants/common";

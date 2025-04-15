@@ -17,7 +17,7 @@ import { toast } from "@/hooks/useToast";
 import { getClipboardImage } from "@/lib/utils";
 import { useAtomValue } from "jotai";
 import { imageAtom } from "@/atoms/image";
-import { useImageActions } from "@/actions/image";
+import { useImageActions } from "@/hooks/useImageActions";
 import { TOAST_DURATION } from "@/constants/common";
 import { useTranslation } from "react-i18next";
 

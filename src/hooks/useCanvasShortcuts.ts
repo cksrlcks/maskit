@@ -1,4 +1,4 @@
-import { useCanvasActions } from "@/actions/canvas";
+import { useCanvasActions } from "@/hooks/useCanvasActions";
 import { useHotkeys } from "react-hotkeys-hook";
 
 export default function useCanvasShortcuts() {

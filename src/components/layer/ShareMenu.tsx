@@ -8,7 +8,7 @@ import {
 } from "@/components/ui";
 import { useAtomValue } from "jotai";
 import { imageAtom } from "@/atoms/image";
-import { useCanvasActions } from "@/actions/canvas";
+import { useCanvasActions } from "@/hooks/useCanvasActions";
 import { useTranslation } from "react-i18next";
 
 export function ShareMenu() {
