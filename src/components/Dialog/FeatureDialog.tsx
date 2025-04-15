@@ -8,17 +8,11 @@ import {
 } from "@/components/ui";
 import { Feature } from "@/components/Welcome";
 import { useAtom } from "jotai";
-import { useHotkeys } from "react-hotkeys-hook";
 import { useTranslation } from "react-i18next";
 
 export function FeatureDialog() {
   const { t } = useTranslation();
   const [dialog, setDialog] = useAtom(dialogAtom);
-
-  useHotkeys("shift+!, !", (e) => {
-    e.preventDefault();
-    setDialog("feature");
-  });
 
   return (
     <Dialog open={dialog === "feature"} onOpenChange={() => setDialog(null)}>

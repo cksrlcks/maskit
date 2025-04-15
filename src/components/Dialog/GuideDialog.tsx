@@ -9,18 +9,12 @@ import { useTranslation } from "react-i18next";
 import { SHORTCUTS } from "@/constants/common";
 import { useAtom, useAtomValue } from "jotai";
 import { osAtom } from "@/atoms/os";
-import { useHotkeys } from "react-hotkeys-hook";
 import { dialogAtom } from "@/atoms/dialog";
 
 export function GuideDialog() {
   const { t } = useTranslation();
   const [dialog, setDialog] = useAtom(dialogAtom);
   const os = useAtomValue(osAtom);
-
-  useHotkeys("/", (e) => {
-    e.preventDefault();
-    setDialog("guide");
-  });
 
   return (
     <Dialog open={dialog === "guide"} onOpenChange={() => setDialog(null)}>

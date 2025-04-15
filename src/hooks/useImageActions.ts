@@ -1,10 +1,13 @@
-import { useSetAtom } from "jotai";
+import { useAtom } from "jotai";
 import { imageAtom } from "@/atoms/image";
-import { getFileNameAndExt } from "@/lib/utils";
-import { DEFAULT_IMAGE_NAME } from "@/constants/common";
+import { getClipboardImage, getFileNameAndExt } from "@/lib/utils";
+import { DEFAULT_IMAGE_NAME, TOAST_DURATION } from "@/constants/common";
+import { toast } from "./useToast";
+import { useTranslation } from "react-i18next";
 
 export const useImageActions = () => {
-  const setImage = useSetAtom(imageAtom);
+  const { t } = useTranslation();
+  const [image, setImage] = useAtom(imageAtom);
 
   const handleUpload = (files: File[]) => {
     const file = files?.[0];
@@ -41,6 +44,25 @@ export const useImageActions = () => {
     };
   };
 
+  const handlePaste = async () => {
+    if (image.element || image.url) return;
+
+    try {
+      const blob = await getClipboardImage();
+
+      if (blob) {
+        handleUploadByBlob(blob);
+      }
+    } catch (error) {
+      console.error(error);
+      toast({
+        duration: TOAST_DURATION,
+        title: t("upload.paste_fail.title"),
+        description: t("upload.paste_fail.desc"),
+      });
+    }
+  }
+
   const resetImage = () => {
     setImage((prev) => ({
       ...prev,
@@ -54,6 +76,7 @@ export const useImageActions = () => {
   return {
     handleUpload,
     handleUploadByBlob,
+    handlePaste,
     resetImage,
   };
 };
