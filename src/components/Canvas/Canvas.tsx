@@ -8,6 +8,7 @@ import { useAtom, useAtomValue } from "jotai";
 import { imageAtom } from "@/atoms/image";
 import { canvasAtom } from "@/atoms/canvas";
 import { useEffect, useRef } from "react";
+import { PIXEL_RATIO } from "@/constants/common";
 
 export function Canvas() {
   const image = useAtomValue(imageAtom);
@@ -38,7 +39,7 @@ export function Canvas() {
             />
 
             <Stage
-              pixelRatio={1}
+              pixelRatio={PIXEL_RATIO}
               ref={stageRef}
               width={width * scale.x}
               height={height * scale.y}
