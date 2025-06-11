@@ -3,7 +3,7 @@ import { Button } from "@/components/ui";
 import { Trash2 } from "lucide-react";
 import { useAtomValue } from "jotai";
 import { canvasAtom } from "@/atoms/canvas";
-import { useCanvasActions } from "@/actions/canvas";
+import { useCanvasActions } from "@/hooks/useCanvasActions";
 import { useTranslation } from "react-i18next";
 
 export function Delete() {

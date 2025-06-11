@@ -1,4 +1,4 @@
-import { useCanvasActions } from "@/actions/canvas";
+import { useCanvasActions } from "@/hooks/useCanvasActions";
 import { canvasAtom } from "@/atoms/canvas";
 import { Button } from "@/components/ui";
 import { useAtomValue } from "jotai";

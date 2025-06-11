@@ -1,4 +1,4 @@
-import { useCanvasActions } from "@/actions/canvas";
+import { useCanvasActions } from "@/hooks/useCanvasActions";
 import { canvasAtom } from "@/atoms/canvas";
 import { RECT_MIN_HEIGHT, RECT_MIN_WIDTH } from "@/constants/common";
 import { RectItem as RectItemProps } from "@/types/canvas";

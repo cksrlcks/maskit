@@ -66,26 +66,13 @@ export function mergeCanvasWithImage(canvas: HTMLCanvasElement, image: HTMLImage
 }
 
 export async function copyClipboard(canvas: HTMLCanvasElement) {
-  try {
-    //ios
-    await navigator.clipboard.write([
-      new ClipboardItem({
-        "image/png": new Promise((resolve) => {
-          canvas.toBlob((blob) => resolve(blob!));
-        }),
+  await navigator.clipboard.write([
+    new ClipboardItem({
+      "image/png": new Promise((resolve) => {
+        canvas.toBlob((blob) => resolve(blob!));
       }),
-    ]);
-  } catch {
-    const blob = await new Promise<Blob>((resolve) =>
-      canvas.toBlob((blob) => resolve(blob!), "image/png"),
-    );
-    //chrome
-    await navigator.clipboard.write([
-      new ClipboardItem({
-        "image/png": blob,
-      }),
-    ]);
-  }
+    }),
+  ]);
 }
 
 export async function convertToFileBlob(canvas: HTMLCanvasElement) {

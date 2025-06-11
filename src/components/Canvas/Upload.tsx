@@ -12,18 +12,11 @@ import clsx from "clsx";
 import useGoogleDrive from "@/hooks/useGoogleDrive";
 import useDropbox from "@/hooks/useDropbox";
 import { Loading } from "./Loading";
-import { useHotkeys } from "react-hotkeys-hook";
-import { toast } from "@/hooks/useToast";
-import { getClipboardImage } from "@/lib/utils";
-import { useAtomValue } from "jotai";
-import { imageAtom } from "@/atoms/image";
-import { useImageActions } from "@/actions/image";
-import { TOAST_DURATION } from "@/constants/common";
+import { useImageActions } from "@/hooks/useImageActions";
 import { useTranslation } from "react-i18next";
 
 export function Upload() {
   const { t } = useTranslation();
-  const image = useAtomValue(imageAtom);
   const { handleUpload, handleUploadByBlob } = useImageActions();
   const { getRootProps, getInputProps, open, isDragAccept, isDragReject } = useDropzone({
     accept: {
@@ -59,26 +52,6 @@ export function Upload() {
       handleUploadByBlob(dropboxBlob);
     }
   }, [dropboxBlob, handleUploadByBlob]);
-
-  useHotkeys("cmd+v, ctrl+v, meta+v", async (e) => {
-    e.preventDefault();
-    if (image.element || image.url) return;
-
-    try {
-      const blob = await getClipboardImage();
-
-      if (blob) {
-        handleUploadByBlob(blob);
-      }
-    } catch (error) {
-      console.error(error);
-      toast({
-        duration: TOAST_DURATION,
-        title: t("upload.paste_fail.title"),
-        description: t("upload.paste_fail.desc"),
-      });
-    }
-  });
 
   if (googleDriveLoading) return <Loading>{t("upload.google_drive.loading")}</Loading>;
   if (dropboxLoading) return <Loading>{t("upload.dropbox.loading")}</Loading>;

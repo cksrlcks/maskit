@@ -1,7 +1,7 @@
 import { Button, Popover, PopoverContent, PopoverTrigger } from "@/components/ui";
 import { Smile } from "lucide-react";
 import EmojiPicker from "../EmojiPicker/EmojiPicker";
-import { useCanvasActions } from "@/actions/canvas";
+import { useCanvasActions } from "@/hooks/useCanvasActions";
 
 export function Emoji() {
   const { handleEmoji } = useCanvasActions();

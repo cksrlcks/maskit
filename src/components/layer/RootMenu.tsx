@@ -28,7 +28,7 @@ import {
   DropdownMenuSubContent,
 } from "@/components/ui";
 import { useNavigate } from "react-router-dom";
-import { useCanvasActions } from "@/actions/canvas";
+import { useCanvasActions } from "@/hooks/useCanvasActions";
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { imageAtom } from "@/atoms/image";
 import { useTranslation } from "react-i18next";

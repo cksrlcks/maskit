@@ -3,11 +3,13 @@ import { RectItem } from "./RectItem";
 import { EmojiItem } from "./EmojItem";
 import { LoadingSpinner } from "./LoadingSpinner";
 import { isMobile } from "react-device-detect";
-import { useCanvasActions } from "@/actions/canvas";
+import { useCanvasActions } from "@/hooks/useCanvasActions";
 import { useAtom, useAtomValue } from "jotai";
 import { imageAtom } from "@/atoms/image";
 import { canvasAtom } from "@/atoms/canvas";
 import { useEffect, useRef } from "react";
+import { PIXEL_RATIO } from "@/constants/common";
+import { CanvasItem } from "@/types/canvas";
 
 export function Canvas() {
   const image = useAtomValue(imageAtom);
@@ -21,6 +23,17 @@ export function Canvas() {
   useEffect(() => {
     setCanvas((prev) => ({ ...prev, stage: stageRef.current }));
   }, [setCanvas]);
+
+  function renderCanvasItem(item: CanvasItem) {
+    switch (item.type) {
+      case "rect":
+        return <RectItem key={item.id} item={item} />;
+      case "emoji":
+        return <EmojiItem key={item.id} item={item} />;
+      default:
+        return null;
+    }
+  }
 
   if (!image.url) return null;
 
@@ -38,7 +51,7 @@ export function Canvas() {
             />
 
             <Stage
-              pixelRatio={1}
+              pixelRatio={PIXEL_RATIO}
               ref={stageRef}
               width={width * scale.x}
               height={height * scale.y}
@@ -50,14 +63,7 @@ export function Canvas() {
               onPointerUp={handleMouseUp}
             >
               <Layer>
-                {allItems.map((item) => {
-                  if (item.type === "rect") {
-                    return <RectItem key={item.id} item={item} />;
-                  } else if (item.type === "emoji") {
-                    return <EmojiItem key={item.id} item={item} />;
-                  }
-                })}
-
+                {allItems.map(renderCanvasItem)}
                 {isOCRMode && blocks.map((item) => <RectItem key={item.id} item={item} />)}
               </Layer>
             </Stage>

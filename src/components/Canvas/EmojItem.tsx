@@ -1,4 +1,4 @@
-import { useCanvasActions } from "@/actions/canvas";
+import { useCanvasActions } from "@/hooks/useCanvasActions";
 import { canvasAtom } from "@/atoms/canvas";
 import { EMOJI_FONT_FAMILY, RECT_MIN_HEIGHT, RECT_MIN_WIDTH } from "@/constants/common";
 import { RectItem } from "@/types/canvas";

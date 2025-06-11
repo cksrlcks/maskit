@@ -1,4 +1,4 @@
-import { useCanvasActions } from "@/actions/canvas";
+import { useCanvasActions } from "@/hooks/useCanvasActions";
 import { Button } from "@/components/ui";
 import { Fullscreen } from "lucide-react";
 import { useTranslation } from "react-i18next";

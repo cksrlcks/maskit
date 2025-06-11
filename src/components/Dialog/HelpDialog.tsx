@@ -11,7 +11,6 @@ import {
   AccordionContent,
 } from "@/components/ui";
 import { useAtom } from "jotai";
-import { useHotkeys } from "react-hotkeys-hook";
 import { useTranslation } from "react-i18next";
 
 type FeatureItem = {
@@ -22,11 +21,6 @@ type FeatureItem = {
 export function HelpDialog() {
   const { t } = useTranslation();
   const [dialog, setDialog] = useAtom(dialogAtom);
-
-  useHotkeys("shift+?, ?, shfit+/", (e) => {
-    e.preventDefault();
-    setDialog("help");
-  });
 
   const features = Object.values(
     t("dialog.question.list", { returnObjects: true }),

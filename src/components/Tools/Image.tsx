@@ -1,4 +1,4 @@
-import { useCanvasActions } from "@/actions/canvas";
+import { useCanvasActions } from "@/hooks/useCanvasActions";
 import { Button } from "@/components/ui";
 import { useAlert } from "@/context/AlertContext";
 import { Images } from "lucide-react";
