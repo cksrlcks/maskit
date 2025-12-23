@@ -7,7 +7,7 @@
 온라인에 이미지를 공유하는 일이 많아진 요즘, 의도치 않게 개인정보나 민감한 내용이 노출되는 경우도 잦아졌습니다. **Maskit**(마스킷)은 이런 상황에서 간단하게 민감한 영역을 가릴 수 있는 도구가 있었으면 좋겠다는 생각에서 출발한 프로젝트입니다.
 
 <h4>
-  <a href="https://maskit.kr/">Maskit Site</a>
+  <a href="https://easy-maskit.netlify.app/">Maskit Site</a>
 </h4>   
 
 ---
